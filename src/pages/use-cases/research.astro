@@ -164,7 +164,7 @@ const latest = PUBLICATIONS.slice(0, 2);
     </LinkButton>
   </Section>
 
-  <CellsSection class="pricing">
+  <Section class="pricing">
     <H level="2">Pricing for research</H>
     <p class="lead">
       To support academic and industry projects of any scale, Cellbytes offers
@@ -175,7 +175,9 @@ const latest = PUBLICATIONS.slice(0, 2);
       also offer cost-effective extensions to existing packages to ensure if you
       have a long-term need for data storage.
     </p>
+  </Section>
 
+  <CellsSection class="packages-band">
     <div class="packages">
       {
         PACKAGES.map((tier) => (
@@ -204,9 +206,11 @@ const latest = PUBLICATIONS.slice(0, 2);
       }
     </div>
 
-    <LinkButton variant="default-arrow" href="/contact">
-      Request a custom offer
-    </LinkButton>
+    <div class="offer">
+      <LinkButton variant="default-arrow" href="/contact">
+        Request a custom offer
+      </LinkButton>
+    </div>
   </CellsSection>
 </Layout>
 
@@ -265,9 +269,11 @@ const latest = PUBLICATIONS.slice(0, 2);
   }
 
   /* CellsSection lays its children on the page grid, which stretches them to
-     the content column. Only the card row wants that width. */
-  .pricing {
-    justify-items: center;
+     the content column. The card row wants that width; the action under it
+     does not, so it sits in a block of its own that centers it. */
+  .offer {
+    display: flex;
+    justify-content: center;
   }
 
   .packages {
@@ -287,9 +293,10 @@ const latest = PUBLICATIONS.slice(0, 2);
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 0.5em;
+    gap: 0.75em;
     flex: 20rem 1 0;
-    max-width: 24rem;
+    max-width: 26rem;
+    padding: calc(1.5 * var(--element-padding));
     background-color: var(--background);
 
     /* A package sits flat on the band behind it, at the radius the rest of the
@@ -298,10 +305,14 @@ const latest = PUBLICATIONS.slice(0, 2);
     box-shadow: none;
   }
 
+  .package :global(h3) {
+    font-size: var(--text-size-heading-3);
+  }
   .price {
     font-size: var(--text-size-heading-2);
     font-weight: bold;
     color: var(--text-color-heading);
+    margin-block: 0.25em 0.5em;
   }
 
   .cta {

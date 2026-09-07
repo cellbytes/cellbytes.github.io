@@ -223,6 +223,9 @@ const ADJUSTABLE = [
   .collaboration :global(.pair) {
     align-items: center;
   }
+  .collaboration :global(h3) {
+    font-size: var(--text-size-heading-2);
+  }
   .diagram {
     width: 100%;
     height: auto;
@@ -268,6 +271,7 @@ const ADJUSTABLE = [
     gap: 0.5em;
     width: 100%;
     max-width: 27rem;
+    padding: calc(1.5 * var(--element-padding));
     background-color: var(--cells-light-pink);
 
     /* A package sits flat on the page, at the radius the rest of the page's
@@ -276,7 +280,7 @@ const ADJUSTABLE = [
     box-shadow: none;
   }
   .package :global(h3) {
-    font-size: var(--text-size-body);
+    font-size: var(--text-size-heading-3);
   }
   /* The two list labels are captions over their lists, not headings competing
      with the package name above them. */

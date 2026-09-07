@@ -282,8 +282,11 @@ const panelId = (key: string) => `${id}-panel-${key}`;
     font-weight: 600;
   }
 
+  /* The panel is framed rather than outlined: a broad band of the same purple
+     the bytes artwork uses, which is what holds the examples together as one
+     block beside the class list. */
   .panel {
-    border: 1px solid var(--bytes-purple);
+    border: 1.25rem solid var(--bytes-purple);
     border-radius: var(--element-border-radius);
     padding: var(--element-padding);
   }
