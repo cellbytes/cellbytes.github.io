@@ -9,6 +9,7 @@ import SufficiencyIcon from "~src/assets/icons/assessments/sample-sufficiency.sv
 import Section from "~src/components/Section.astro";
 import H from "~src/components/HeadingLink.astro";
 import Glyphs from "~src/components/AssessmentGlyphs.astro";
+import Dysplasias from "~src/components/DysplasiaTypes.astro";
 import Lineages, { type Lineage } from "~src/components/CellLineages.astro";
 
 // The lineage colors the application paints cell boxes and differentials with,
@@ -88,18 +89,37 @@ const PERIPHERAL_BLOOD: Lineage[] = [
   { name: "Artefact", color: OTHER, members: [] },
 ];
 
-/** The dysplasia features reported on a bone marrow sample. */
-const BM_DYSPLASIA = ["Bilobed nucleus", "Auer rods", "Vacuolated"];
-
-/** On a blood sample the same features are reported per lineage. */
-const PB_DYSPLASIAS = [
+/**
+ * The dysplasia features reported for each group of cell classes, mirroring the
+ * dysplasia structure the application assesses. Bone marrow covers two groups
+ * that a blood smear does not: erythroblasts and megakaryocytes.
+ */
+const BM_DYSPLASIAS = [
   {
-    lineage: "Blasts / immature granulocytes",
+    group: "Blasts / immature granulocytes",
     types: ["Bilobed nucleus", "Auer rods", "Vacuolated"],
   },
-  { lineage: "Mature granulocytes", types: ["Vacuolated"] },
-  { lineage: "Lymphocytes", types: ["Vacuolated"] },
-  { lineage: "Plasma cells", types: ["Vacuolated"] },
+  {
+    group: "Erythroblasts",
+    types: ["N:C asynchrony", "Dysmorphic", "Multinucleated", "Vacuolated"],
+  },
+  {
+    group: "Megakaryocytes",
+    types: ["Separated nuclei", "Hypolobated nuclei"],
+  },
+  { group: "Mature granulocytes", types: ["Vacuolated"] },
+  { group: "Lymphocytes", types: ["Vacuolated"] },
+  { group: "Plasma cells", types: ["Vacuolated"] },
+];
+
+const PB_DYSPLASIAS = [
+  {
+    group: "Blasts / immature granulocytes",
+    types: ["Bilobed nucleus", "Auer rods", "Vacuolated"],
+  },
+  { group: "Mature granulocytes", types: ["Vacuolated"] },
+  { group: "Lymphocytes", types: ["Vacuolated"] },
+  { group: "Plasma cells", types: ["Vacuolated"] },
 ];
 
 /**
@@ -146,9 +166,7 @@ const SAMPLE_LEVEL = [
       <Lineages lineages={BONE_MARROW} />
       <div class="panel">
         <p class="panel-label">Dysplasia types</p>
-        <ul class="types">
-          {BM_DYSPLASIA.map((type) => <li>{type}</li>)}
-        </ul>
+        <Dysplasias groups={BM_DYSPLASIAS} />
       </div>
     </div>
 
@@ -171,17 +189,8 @@ const SAMPLE_LEVEL = [
     <div class="split">
       <Lineages lineages={PERIPHERAL_BLOOD} />
       <div class="panel">
-        <p class="panel-label">Dysplasias</p>
-        <dl class="types">
-          {
-            PB_DYSPLASIAS.map((entry) => (
-              <div>
-                <dt>{entry.lineage}</dt>
-                <dd>{entry.types.join(", ")}</dd>
-              </div>
-            ))
-          }
-        </dl>
+        <p class="panel-label">Dysplasia types</p>
+        <Dysplasias groups={PB_DYSPLASIAS} />
       </div>
     </div>
 
@@ -247,21 +256,6 @@ const SAMPLE_LEVEL = [
     font-weight: 600;
     margin-block-end: 0.5em;
   }
-  .types {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5em var(--element-padding);
-  }
-  .types dt {
-    font-weight: 600;
-    color: var(--text-color-heading);
-  }
-  .types dd {
-    margin: 0;
-  }
-
   /* Morphology and the sample-level measures sit side by side under the
      classes, each glyph over the name of what it measures. */
   .assessments {

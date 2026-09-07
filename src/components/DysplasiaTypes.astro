@@ -1,0 +1,39 @@
+---
+export interface DysplasiaGroup {
+  /** The cell classes the features below are assessed on. */
+  group: string;
+  types: string[];
+}
+
+interface Props {
+  groups: DysplasiaGroup[];
+}
+const { groups } = Astro.props;
+---
+
+<dl>
+  {
+    groups.map((entry) => (
+      <div>
+        <dt>{entry.group}</dt>
+        <dd>{entry.types.join(", ")}</dd>
+      </div>
+    ))
+  }
+</dl>
+
+<style>
+  dl {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: var(--element-padding);
+    margin: 0;
+  }
+  dt {
+    font-weight: 600;
+    color: var(--text-color-heading);
+  }
+  dd {
+    margin: 0;
+  }
+</style>
