@@ -269,6 +269,11 @@ const ADJUSTABLE = [
     width: 100%;
     max-width: 27rem;
     background-color: var(--cells-light-pink);
+
+    /* A package sits flat on the page, at the radius the rest of the page's
+       blocks use rather than the tighter one Card defaults to. */
+    border-radius: var(--element-border-radius);
+    box-shadow: none;
   }
   .package :global(h3) {
     font-size: var(--text-size-body);

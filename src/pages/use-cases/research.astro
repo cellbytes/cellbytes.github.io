@@ -291,6 +291,11 @@ const latest = PUBLICATIONS.slice(0, 2);
     flex: 20rem 1 0;
     max-width: 24rem;
     background-color: var(--background);
+
+    /* A package sits flat on the band behind it, at the radius the rest of the
+       page's blocks use rather than the tighter one Card defaults to. */
+    border-radius: var(--element-border-radius);
+    box-shadow: none;
   }
 
   .price {

@@ -10,7 +10,9 @@ import Section from "~src/components/Section.astro";
 import H from "~src/components/HeadingLink.astro";
 import Glyphs from "~src/components/AssessmentGlyphs.astro";
 import Dysplasias from "~src/components/DysplasiaTypes.astro";
-import Lineages, { type Lineage } from "~src/components/CellLineages.astro";
+import CellClasses, {
+  type Lineage,
+} from "~src/components/CellClassBrowser.astro";
 
 // The lineage colors the application paints cell boxes and differentials with,
 // so a reader recognizes the same grouping in the product.
@@ -26,67 +28,119 @@ const BONE_MARROW: Lineage[] = [
     name: "Erythroid",
     color: ERYTHROID,
     dysplasia: true,
-    members: ["Proerythroblast", "Erythroblast"],
+    members: [
+      { name: "Proerythroblast", key: "bm_proerythroblast" },
+      { name: "Erythroblast", key: "bm_erythroblast" },
+    ],
   },
   {
     name: "Blasts",
     color: BLASTS,
     dysplasia: true,
-    members: ["Blast", "Promonocyte"],
+    members: [
+      { name: "Blast", key: "bm_blast" },
+      { name: "Promonocyte", key: "bm_promonocyte" },
+    ],
   },
   {
     name: "Granulocytic",
     color: GRANULOCYTIC,
     dysplasia: true,
     members: [
-      "Promyelocyte",
-      "Myelocyte",
-      "Metamyelocyte",
-      "Neutrophil",
-      "Basophil",
-      { name: "Eosinophils", members: ["Mature", "Immature"] },
+      { name: "Promyelocyte", key: "bm_promyelocyte" },
+      { name: "Myelocyte", key: "bm_myelocyte" },
+      { name: "Metamyelocyte", key: "bm_metamyelocyte" },
+      { name: "Neutrophil", key: "bm_neutrophil" },
+      { name: "Basophil", key: "bm_basophil" },
+      {
+        name: "Eosinophils",
+        members: [
+          { name: "Mature", key: "bm_eosinophil" },
+          { name: "Immature", key: "bm_eosinophil_immature" },
+        ],
+      },
     ],
   },
   {
     name: "Lymphoid",
     color: LYMPHOID,
     dysplasia: true,
-    members: ["Lymphocyte", "Plasma cell"],
+    members: [
+      { name: "Lymphocyte", key: "bm_lymphocyte" },
+      { name: "Plasma cell", key: "bm_plasma_cell" },
+    ],
   },
   {
     name: "Monocytic",
     color: MONOCYTIC,
-    members: ["Monocyte", "Macrophage"],
+    members: [
+      { name: "Monocyte", key: "bm_monocyte" },
+      { name: "Macrophage", key: "bm_macrophage" },
+    ],
   },
   {
     name: "Other",
     color: OTHER,
-    members: ["Artefact", "Megakaryocyte *"],
+    members: [
+      { name: "Artefact", key: "bm_artefact" },
+      { name: "Megakaryocyte *", key: "bm_megakaryocyte" },
+    ],
   },
 ];
 
 const PERIPHERAL_BLOOD: Lineage[] = [
-  { name: "Erythroblast", color: ERYTHROID, members: [] },
-  { name: "Blasts", color: BLASTS, members: ["Blast", "Promonocyte"] },
+  {
+    name: "Erythroblast",
+    key: "pb_erythroblast",
+    color: ERYTHROID,
+    members: [],
+  },
+  {
+    name: "Blasts",
+    color: BLASTS,
+    members: [
+      { name: "Blast", key: "pb_blast" },
+      { name: "Promonocyte", key: "pb_promonocyte" },
+    ],
+  },
   {
     name: "Granulocytic",
     color: GRANULOCYTIC,
     members: [
-      "Promyelocyte",
-      "Myelocyte",
-      "Metamyelocyte",
-      { name: "Neutrophil", members: ["Band", "Segmented"] },
-      "Basophil",
-      "Eosinophils",
+      { name: "Promyelocyte", key: "pb_promyelocyte" },
+      { name: "Myelocyte", key: "pb_myelocyte" },
+      { name: "Metamyelocyte", key: "pb_metamyelocyte" },
+      {
+        name: "Neutrophil",
+        members: [
+          { name: "Band", key: "pb_band_neutrophil" },
+          { name: "Segmented", key: "pb_segmented_neutrophil" },
+        ],
+      },
+      { name: "Basophil", key: "pb_basophil" },
+      { name: "Eosinophils", key: "pb_eosinophil" },
     ],
   },
   {
     name: "Lymphoid",
     color: LYMPHOID,
-    members: ["Lymphocyte", "Plasma cell"],
+    members: [
+      { name: "Lymphocyte", key: "pb_lymphocyte" },
+      { name: "Plasma cell", key: "pb_plasma_cell" },
+    ],
   },
-  { name: "Monocyte", color: MONOCYTIC, members: [] },
-  { name: "Artefact", color: OTHER, members: [] },
+  {
+    name: "Monocyte",
+    key: "pb_monocyte",
+    color: MONOCYTIC,
+    members: [],
+  },
+  {
+    name: "Artefact",
+    key: "pb_artefact",
+    color: OTHER,
+    members: [],
+  },
 ];
 
 /**
@@ -162,13 +216,10 @@ const SAMPLE_LEVEL = [
     <H level="3">1. Bone marrow samples</H>
     <H level="4" class="label">Cell differentials and dysplasias</H>
 
-    <div class="split">
-      <Lineages lineages={BONE_MARROW} />
-      <div class="panel">
-        <p class="panel-label">Dysplasia types</p>
-        <Dysplasias groups={BM_DYSPLASIAS} />
-      </div>
-    </div>
+    <CellClasses id="bm" lineages={BONE_MARROW}>
+      <p class="panel-label">Dysplasia types</p>
+      <Dysplasias groups={BM_DYSPLASIAS} />
+    </CellClasses>
 
     <div class="assessments">
       <div>
@@ -186,13 +237,10 @@ const SAMPLE_LEVEL = [
     <H level="3">2. Peripheral blood samples</H>
     <H level="4" class="label">Cell differentials</H>
 
-    <div class="split">
-      <Lineages lineages={PERIPHERAL_BLOOD} />
-      <div class="panel">
-        <p class="panel-label">Dysplasia types</p>
-        <Dysplasias groups={PB_DYSPLASIAS} />
-      </div>
-    </div>
+    <CellClasses id="pb" lineages={PERIPHERAL_BLOOD}>
+      <p class="panel-label">Dysplasia types</p>
+      <Dysplasias groups={PB_DYSPLASIAS} />
+    </CellClasses>
 
     <div class="assessments">
       <div>
@@ -231,33 +279,14 @@ const SAMPLE_LEVEL = [
     color: var(--logo-magenta);
   }
 
-  /* Class list beside what the classes look like. Below the breakpoint the
-     panel drops under the list rather than squeezing beside it. */
-  .split {
-    width: 100%;
-    display: grid;
-    grid-template-columns: minmax(13rem, 16rem) 1fr;
-    gap: calc(2 * var(--element-padding));
-    align-items: start;
-  }
-  @media screen and (width < 60em) {
-    .split {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .panel {
-    border: 1px solid var(--bytes-purple);
-    border-radius: var(--element-border-radius);
-    padding: var(--element-padding);
-  }
+  /* Morphology and the sample-level measures sit side by side under the
+     classes, each glyph over the name of what it measures. */
   .panel-label {
     color: var(--accent-2);
     font-weight: 600;
     margin-block-end: 0.5em;
   }
-  /* Morphology and the sample-level measures sit side by side under the
-     classes, each glyph over the name of what it measures. */
+
   .assessments {
     display: flex;
     flex-wrap: wrap;

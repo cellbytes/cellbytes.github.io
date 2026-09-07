@@ -1,0 +1,317 @@
+---
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+
+export interface Member {
+  name: string;
+  /**
+   * The application's class name, lowercased. It is also the folder the
+   * example crops live in, which is what pairs a class with its gallery.
+   */
+  key: string;
+}
+
+export interface Lineage {
+  name: string;
+  /**
+   * Set when the lineage is itself a single class rather than a grouping, in
+   * which case its name is the selectable item and it has no members.
+   */
+  key?: string;
+  /** The color the application paints this lineage's cells with. */
+  color: string;
+  /** Marked with an asterisk, meaning the dysplasia assessment covers it. */
+  dysplasia?: boolean;
+  members: (Member | { name: string; members: Member[] })[];
+}
+
+interface Props {
+  /** Distinct per instance, since the page renders one browser per sample type. */
+  id: string;
+  lineages: Lineage[];
+}
+const { id, lineages } = Astro.props;
+
+// Every crop that has been exported, grouped by the class it belongs to. A
+// class with no folder here is a class the reference slide had no cells of, and
+// it renders as a plain label rather than something to click.
+const files = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/images/cells/*/*.webp",
+  { eager: true },
+);
+const examples = new Map<string, ImageMetadata[]>();
+for (const path of Object.keys(files).sort()) {
+  const key = path.split("/").at(-2)!;
+  const list = examples.get(key) ?? [];
+  list.push(files[path]!.default);
+  examples.set(key, list);
+}
+
+const flat = lineages.flatMap((lineage) => [
+  ...(lineage.key ? [{ name: lineage.name, key: lineage.key }] : []),
+  ...lineage.members.flatMap((member) =>
+    "members" in member ? member.members : [member],
+  ),
+]);
+const shown = flat.filter((member) => examples.has(member.key));
+const first = shown[0]?.key;
+
+const tabId = (key: string) => `${id}-tab-${key}`;
+const panelId = (key: string) => `${id}-panel-${key}`;
+---
+
+<div class="browser" data-cell-browser>
+  {
+    /* The lineage wrappers are presentational so the tablist owns the tabs
+      directly: the grouping they draw is visual, and the list structure would
+      otherwise sit between a tablist and its tabs. */
+  }
+  <div
+    class="lineages"
+    role="tablist"
+    aria-orientation="vertical"
+    aria-label="Cell classes"
+  >
+    {
+      lineages.map((lineage) => (
+        <div
+          class="lineage"
+          role="presentation"
+          style={`--lineage: ${lineage.color}`}
+        >
+          {lineage.key && examples.has(lineage.key) ? (
+            <button
+              type="button"
+              role="tab"
+              class="lineage-name"
+              id={tabId(lineage.key)}
+              aria-controls={panelId(lineage.key)}
+              aria-selected={lineage.key === first ? "true" : "false"}
+              tabindex={lineage.key === first ? 0 : -1}
+            >
+              {lineage.name}
+            </button>
+          ) : (
+            <p class="lineage-name">
+              {lineage.name}
+              {lineage.dysplasia && " *"}
+            </p>
+          )}
+          <ul role="presentation">
+            {lineage.members.map((member) =>
+              "members" in member ? (
+                <li role="presentation">
+                  <span class="member-group">{member.name}</span>
+                  <ul role="presentation">
+                    {member.members.map((sub) => (
+                      <li role="presentation">
+                        {examples.has(sub.key) ? (
+                          <button
+                            type="button"
+                            role="tab"
+                            id={tabId(sub.key)}
+                            aria-controls={panelId(sub.key)}
+                            aria-selected={sub.key === first ? "true" : "false"}
+                            tabindex={sub.key === first ? 0 : -1}
+                          >
+                            {sub.name}
+                          </button>
+                        ) : (
+                          <span class="unlisted">{sub.name}</span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ) : (
+                <li role="presentation">
+                  {examples.has(member.key) ? (
+                    <button
+                      type="button"
+                      role="tab"
+                      id={tabId(member.key)}
+                      aria-controls={panelId(member.key)}
+                      aria-selected={member.key === first ? "true" : "false"}
+                      tabindex={member.key === first ? 0 : -1}
+                    >
+                      {member.name}
+                    </button>
+                  ) : (
+                    <span class="unlisted">{member.name}</span>
+                  )}
+                </li>
+              ),
+            )}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="panel">
+    <p class="panel-label">Cell examples</p>
+    {
+      shown.map((member) => (
+        <ul
+          class="grid"
+          role="tabpanel"
+          id={panelId(member.key)}
+          aria-labelledby={tabId(member.key)}
+          aria-label={`Example ${member.name.toLowerCase()} cells`}
+          hidden={member.key !== first}
+        >
+          {examples.get(member.key)!.map((image) => (
+            <li>
+              <Image
+                src={image}
+                alt=""
+                width={160}
+                height={160}
+                loading="lazy"
+              />
+            </li>
+          ))}
+        </ul>
+      ))
+    }
+
+    <div class="extra">
+      <slot />
+    </div>
+  </div>
+</div>
+
+<script>
+  for (const root of document.querySelectorAll("[data-cell-browser]")) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+
+    function select(tab: HTMLButtonElement) {
+      for (const other of tabs) {
+        const on = other === tab;
+        other.setAttribute("aria-selected", String(on));
+        other.tabIndex = on ? 0 : -1;
+        const panel = document.getElementById(
+          other.getAttribute("aria-controls")!,
+        );
+        if (panel) panel.hidden = !on;
+      }
+    }
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => select(tab));
+      // Hovering previews a class without committing to it, which is how the
+      // list reads as a set of samples rather than a menu.
+      tab.addEventListener("mouseenter", () => select(tab));
+      tab.addEventListener("keydown", (event) => {
+        const step =
+          event.key === "ArrowDown" ? 1 : event.key === "ArrowUp" ? -1 : 0;
+        if (!step) return;
+        event.preventDefault();
+        const next = tabs[(index + step + tabs.length) % tabs.length]!;
+        next.focus();
+        select(next);
+      });
+    });
+  }
+</script>
+
+<style>
+  .browser {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(11rem, 14rem) minmax(0, 30rem);
+    justify-content: center;
+    gap: calc(2 * var(--element-padding));
+    align-items: start;
+  }
+  @media screen and (width < 60em) {
+    .browser {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* One column down the page, each lineage measured by its own accent bar so
+     the groups read as the branches of a single list. */
+  .lineages {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75em;
+  }
+  .lineage {
+    border-inline-start: 3px solid var(--lineage);
+    padding-inline-start: 0.75em;
+  }
+  .lineage-name {
+    color: var(--text-color-heading);
+  }
+  button.lineage-name {
+    color: var(--text-color-heading);
+  }
+  ul {
+    list-style: none;
+    padding-inline-start: 0.75em;
+  }
+  .lineage > ul {
+    padding-inline-start: 0;
+  }
+
+  /* A class the reference slide held no cells of stays a label rather than
+     becoming a control that would open an empty gallery. */
+  .unlisted,
+  .member-group,
+  [role="tab"] {
+    display: block;
+    padding: 0.1em 0.4em;
+    border-radius: var(--tiny-border-radius);
+  }
+  [role="tab"] {
+    font: inherit;
+    color: var(--text-color-body);
+    text-align: start;
+    width: 100%;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  [role="tab"]:hover {
+    background-color: var(--bytes-purple);
+  }
+  [role="tab"][aria-selected="true"] {
+    background-color: var(--bytes-purple);
+    color: var(--text-color-heading);
+    font-weight: 600;
+  }
+
+  .panel {
+    border: 1px solid var(--bytes-purple);
+    border-radius: var(--element-border-radius);
+    padding: var(--element-padding);
+  }
+  .panel-label {
+    color: var(--accent-2);
+    font-weight: 600;
+    margin-block-end: 0.75em;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5em;
+    padding: 0;
+  }
+  /* `display: grid` above outranks the user-agent rule behind the attribute,
+     so the hidden panels need saying again here. */
+  .grid[hidden] {
+    display: none;
+  }
+
+  .extra {
+    margin-block-start: var(--element-padding);
+  }
+  .grid :global(img) {
+    width: 100%;
+    height: auto;
+    border-radius: var(--small-border-radius);
+    display: block;
+  }
+</style>
