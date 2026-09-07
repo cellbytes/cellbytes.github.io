@@ -1,7 +1,12 @@
 ---
 import { Image } from "astro:assets";
-import collaborating from "~src/assets/images/mockups/collaborating_erythroblasts.webp";
-import remote from "~src/assets/images/contact/doctor-laptop.jpg";
+import clinical from "~src/assets/images/useCases/clinical.png";
+import remote from "~src/assets/images/useCases/remote-work.png";
+import relabelArtefact from "~src/assets/images/useCases/relabel-artefact.png";
+import relabelDifferential from "~src/assets/images/useCases/relabel-differential.png";
+import relabelMyelocyte from "~src/assets/images/useCases/relabel-myelocyte.png";
+import ConsultDiagram from "~src/assets/diagrams/consult-with-ease.svg";
+import ExternalDiagram from "~src/assets/diagrams/external-collaboration.svg";
 
 import { WIDTHS } from "~src/consts";
 import Section from "~src/components/Section.astro";
@@ -20,7 +25,7 @@ export const meta = {
   title: "Clinical | Cellbytes",
   description:
     "Pre-classification of every cell, remote consultation and LIS integration for the diagnostic laboratory, priced per slide.",
-  card: { title: "Cellbytes in the clinic", image: collaborating },
+  card: { title: "Cellbytes in the clinic", image: clinical },
 } satisfies PageMeta;
 
 /** What every clinical license carries, and what is negotiated per site. */
@@ -43,8 +48,8 @@ const ADJUSTABLE = [
   <HeroSection>
     <Pair reversed>
       <Image
-        src={collaborating}
-        alt="Two doctors analyzing the results of a slide using Cellbytes."
+        src={clinical}
+        alt="A physician pointing at pre-classified cells on one of two monitors running Cellbytes."
         widths={WIDTHS}
         height="300"
       />
@@ -77,7 +82,7 @@ const ADJUSTABLE = [
   <Pair tag="section">
     <Image
       src={remote}
-      alt="A doctor reviewing a slide on a laptop away from the laboratory."
+      alt="A doctor reviewing cell images on a laptop at a window seat, away from the laboratory."
       widths={WIDTHS}
       height="300"
     />
@@ -104,6 +109,7 @@ const ADJUSTABLE = [
           with your colleague for a second opinion or simply to show an
           interesting case for educational purposes.
         </p>
+        <ConsultDiagram class="art-diagram-consult diagram" />
       </ContentBlock>
       <ContentBlock>
         <H level="3">External collaboration</H>
@@ -113,6 +119,7 @@ const ADJUSTABLE = [
           pool. This flexible model helps institutions easily distribute the
           workload during sudden sample surges or staffing shortages.
         </p>
+        <ExternalDiagram class="art-diagram-external diagram" />
       </ContentBlock>
     </Pair>
   </CellsSection>
@@ -135,6 +142,48 @@ const ADJUSTABLE = [
       daily use are fed back into model fine-tuning, ensuring your system
       continually adapts to your specific diagnostic needs.
     </p>
+
+    <figure class="relabel">
+      <div class="steps">
+        <Image
+          src={relabelArtefact}
+          alt="A cell pre-classified as an artefact, outlined in the viewer."
+          widths={[240, 540]}
+          height="266"
+        />
+        <svg
+          class="arrow"
+          width="24"
+          height="24"
+          viewBox="0 0 17 16"
+          aria-hidden
+        >
+          <path d="M8.875 1.25L15.625 8L8.875 14.75M14.6875 8H1"></path>
+        </svg>
+        <Image
+          src={relabelDifferential}
+          alt="The same cell being dragged onto the myelocyte row of the cell differential."
+          widths={[240, 540]}
+          height="213"
+        />
+        <svg
+          class="arrow"
+          width="24"
+          height="24"
+          viewBox="0 0 17 16"
+          aria-hidden
+        >
+          <path d="M8.875 1.25L15.625 8L8.875 14.75M14.6875 8H1"></path>
+        </svg>
+        <Image
+          src={relabelMyelocyte}
+          alt="The cell after reclassification, now labeled a myelocyte."
+          widths={[240, 540]}
+          height="266"
+        />
+      </div>
+      <figcaption>Finetuned AI yields better results</figcaption>
+    </figure>
   </Section>
 
   <Section class="pricing">
@@ -173,6 +222,47 @@ const ADJUSTABLE = [
   .ingress {
     font-size: var(--text-size-ingress);
     max-width: 60ch;
+  }
+
+  .diagram {
+    width: 100%;
+    height: auto;
+    max-width: 32rem;
+    margin-block-start: var(--element-padding);
+  }
+
+  /* Before, the reclassification, after. The middle frame is the action, so it
+     sits between the two states rather than under them. */
+  .relabel {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--element-padding);
+  }
+  .steps {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--element-padding);
+  }
+  .steps :global(img) {
+    height: auto;
+    max-width: min(100%, 20rem);
+  }
+  .arrow {
+    flex: none;
+    fill: none;
+    stroke: var(--accent-2);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  figcaption {
+    color: var(--text-color-heading);
+    font-weight: 600;
   }
 
   /* Doubled class to beat Card's own .card { display: flex } rule: the prod

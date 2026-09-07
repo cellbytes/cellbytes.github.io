@@ -1,4 +1,11 @@
 ---
+import CellularityIcon from "~src/assets/icons/assessments/cellularity.svg";
+import ClustersIcon from "~src/assets/icons/assessments/clusters.svg";
+import MegakaryocytesIcon from "~src/assets/icons/assessments/megakaryocyte-count.svg";
+import ShapeIcon from "~src/assets/icons/assessments/shape.svg";
+import SizeIcon from "~src/assets/icons/assessments/size.svg";
+import SufficiencyIcon from "~src/assets/icons/assessments/sample-sufficiency.svg";
+
 import Section from "~src/components/Section.astro";
 import H from "~src/components/HeadingLink.astro";
 
@@ -104,12 +111,28 @@ const PB_DYSPLASIAS = [
   { lineage: "Plasma cells", types: ["Vacuolated"] },
 ];
 
-const MORPHOLOGY = ["Size", "Shape"];
+/**
+ * The measurements that are not a cell class, each with the glyph that stands
+ * for it. `art` is the artwork.css class that repaints the icon from theme
+ * tokens; the icons carry their exported colors otherwise.
+ */
+const MORPHOLOGY = [
+  { name: "Size", icon: SizeIcon, art: "art-icon-size" },
+  { name: "Shape", icon: ShapeIcon, art: "art-icon-shape" },
+];
 const SAMPLE_LEVEL = [
-  "Clusters",
-  "Megakaryocyte count",
-  "Cellularity",
-  "Sample sufficiency",
+  { name: "Clusters", icon: ClustersIcon, art: "art-icon-clusters" },
+  {
+    name: "Megakaryocyte count",
+    icon: MegakaryocytesIcon,
+    art: "art-icon-megakaryocytes",
+  },
+  { name: "Cellularity", icon: CellularityIcon, art: "art-icon-cellularity" },
+  {
+    name: "Sample sufficiency",
+    icon: SufficiencyIcon,
+    art: "art-icon-sufficiency",
+  },
 ];
 ---
 
@@ -167,11 +190,33 @@ const SAMPLE_LEVEL = [
       </div>
       <div>
         <dt>Morphology</dt>
-        <dd>{MORPHOLOGY.join(", ")}</dd>
+        <dd>
+          <ul class="glyphs">
+            {
+              MORPHOLOGY.map((item) => (
+                <li>
+                  <item.icon class={item.art} />
+                  {item.name}
+                </li>
+              ))
+            }
+          </ul>
+        </dd>
       </div>
       <div>
         <dt>Sample-level</dt>
-        <dd>{SAMPLE_LEVEL.join(", ")}</dd>
+        <dd>
+          <ul class="glyphs">
+            {
+              SAMPLE_LEVEL.map((item) => (
+                <li>
+                  <item.icon class={item.art} />
+                  {item.name}
+                </li>
+              ))
+            }
+          </ul>
+        </dd>
       </div>
     </dl>
   </div>
@@ -219,7 +264,18 @@ const SAMPLE_LEVEL = [
       }
       <div>
         <dt>Morphology</dt>
-        <dd>{MORPHOLOGY.join(", ")}</dd>
+        <dd>
+          <ul class="glyphs">
+            {
+              MORPHOLOGY.map((item) => (
+                <li>
+                  <item.icon class={item.art} />
+                  {item.name}
+                </li>
+              ))
+            }
+          </ul>
+        </dd>
       </div>
     </dl>
   </div>
@@ -284,8 +340,37 @@ const SAMPLE_LEVEL = [
   .assessments > div {
     flex: 16rem 1 1;
   }
+  /* A group of glyphs needs more of the row than a line of text does, or its
+     icons wrap into a second row while the text beside them sits half empty. */
+  .assessments > div:has(.glyphs) {
+    flex-grow: 2;
+  }
   dt {
     font-weight: bold;
     color: var(--text-color-heading);
+  }
+
+  /* Each glyph sits above the name of what it measures. They are drawn at
+     wildly different aspect ratios, so a fixed row height rather than a fixed
+     width is what lines them up. */
+  .glyphs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--element-padding);
+    list-style: none;
+    padding: 0;
+  }
+  .glyphs li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5em;
+    text-align: center;
+  }
+  .glyphs :global(svg) {
+    height: 3.5rem;
+    width: auto;
+    max-width: 8rem;
   }
 </style>

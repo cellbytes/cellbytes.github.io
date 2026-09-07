@@ -1,6 +1,8 @@
 ---
 import { Image } from "astro:assets";
-import research from "~src/assets/images/research/research.jpg";
+import coworking from "~src/assets/images/useCases/research.webp";
+import ShapeIcon from "~src/assets/icons/assessments/shape.svg";
+import SizeIcon from "~src/assets/icons/assessments/size.svg";
 
 import { WIDTHS } from "~src/consts";
 import Section from "~src/components/Section.astro";
@@ -22,7 +24,7 @@ export const meta = {
   title: "Research | Cellbytes",
   description:
     "Cytomorphology data for research: morphology measurements, cell-level exports in the formats your analysis expects, and packages that scale from a proof of concept to a full cohort.",
-  card: { title: "Cellbytes for research", image: research },
+  card: { title: "Cellbytes for research", image: coworking },
 } satisfies PageMeta;
 
 /**
@@ -77,8 +79,8 @@ const latest = PUBLICATIONS.slice(0, 2);
   <HeroSection>
     <Pair>
       <Image
-        src={research}
-        alt="A man looking at a pinboard filled with research papers."
+        src={coworking}
+        alt="Two researchers discussing a wall of printed single-cell images."
         widths={WIDTHS}
         height="300"
       />
@@ -112,6 +114,17 @@ const latest = PUBLICATIONS.slice(0, 2);
       Cellbytes offers data on the size of the cell and the nucleus, as well as
       the shape of both.
     </p>
+
+    <ul class="glyphs">
+      <li>
+        <SizeIcon class="art-icon-size" />
+        Size
+      </li>
+      <li>
+        <ShapeIcon class="art-icon-shape" />
+        Shape
+      </li>
+    </ul>
   </DecoratedCard>
 
   <BytesSection class="formats">
@@ -216,6 +229,30 @@ const latest = PUBLICATIONS.slice(0, 2);
   }
   .formats-copy.trailing :global(.content-block) {
     margin-inline-start: auto;
+  }
+
+  /* The two glyphs are drawn at different aspect ratios, so a shared height
+     rather than a shared width is what lines them up. */
+  .glyphs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: center;
+    gap: calc(2 * var(--element-padding));
+    list-style: none;
+    padding: 0;
+  }
+  .glyphs li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5em;
+    color: var(--text-color-heading);
+    font-weight: 600;
+  }
+  .glyphs :global(svg) {
+    height: 4rem;
+    width: auto;
   }
 
   .packages {

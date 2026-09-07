@@ -135,3 +135,75 @@
 .art-icon-report path {
   stroke: var(--accent-2);
 }
+
+/* icons/assessments/*.svg
+ *
+ * The six assessments the feature taxonomy illustrates. Cell shapes are drawn
+ * in magenta and the measurement marks around them in the darker accent, so
+ * the thing being measured stays distinct from the measuring. */
+.art-icon-cellularity [class$="__cls-1"],
+.art-icon-cellularity [class$="__cls-3"],
+.art-icon-clusters [class$="__cls-1"],
+.art-icon-sufficiency [class$="__cls-3"] {
+  stroke: var(--bytes-magenta);
+}
+.art-icon-shape [class$="__cls-1"],
+.art-icon-size [class$="__cls-1"],
+.art-icon-sufficiency [class$="__cls-1"] {
+  fill: var(--bytes-magenta);
+}
+.art-icon-cellularity [class$="__cls-2"],
+.art-icon-clusters [class$="__cls-2"],
+.art-icon-megakaryocytes [class$="__cls-1"],
+.art-icon-shape [class$="__cls-2"],
+.art-icon-size [class$="__cls-2"],
+.art-icon-sufficiency [class$="__cls-2"] {
+  stroke: var(--accent-2);
+}
+.art-icon-megakaryocytes [class$="__cls-2"],
+.art-icon-megakaryocytes [class$="__cls-3"] {
+  fill: var(--accent-2);
+}
+
+/* diagrams/consult-with-ease.svg, external-collaboration.svg
+ *
+ * Both diagrams draw the same vocabulary: equipment and screens outlined in the
+ * accent, the slide inside a screen and the arrows that carry it in magenta,
+ * and the labels underneath in the heading color. */
+.art-diagram-consult [class$="__cls-4"],
+.art-diagram-consult [class$="__cls-5"],
+.art-diagram-consult [class$="__cls-7"],
+.art-diagram-external [class$="__cls-3"],
+.art-diagram-external [class$="__cls-4"],
+.art-diagram-external [class$="__cls-6"],
+.art-diagram-external [class$="__cls-8"] {
+  stroke: var(--bytes-magenta);
+}
+.art-diagram-consult [class$="__cls-1"],
+.art-diagram-consult [class$="__cls-2"],
+.art-diagram-external [class$="__cls-1"],
+.art-diagram-external [class$="__cls-2"] {
+  fill: var(--bytes-magenta);
+}
+.art-diagram-consult [class$="__cls-6"],
+.art-diagram-consult [class$="__cls-8"],
+.art-diagram-consult [class$="__cls-9"],
+.art-diagram-consult [class$="__cls-10"],
+.art-diagram-external [class$="__cls-5"],
+.art-diagram-external [class$="__cls-7"],
+.art-diagram-external [class$="__cls-9"],
+.art-diagram-external [class$="__cls-10"],
+.art-diagram-external [class$="__cls-11"] {
+  stroke: var(--accent-2);
+}
+.art-diagram-consult [class$="__cls-12"],
+.art-diagram-consult [class$="__cls-13"],
+.art-diagram-external [class$="__cls-15"],
+.art-diagram-external [class$="__cls-16"] {
+  fill: var(--accent-2);
+}
+.art-diagram-consult [class$="__cls-3"],
+.art-diagram-external [class$="__cls-12"],
+.art-diagram-external [class$="__cls-13"] {
+  fill: var(--text-color-heading);
+}
