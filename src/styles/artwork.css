@@ -152,6 +152,15 @@
 .art-icon-sufficiency [class$="__cls-1"] {
   fill: var(--bytes-magenta);
 }
+/* The cell body is opaque, not an outline around whatever is behind it: on the
+   morphology card it reads as a white cell on a purple ground. `cls-cell` is
+   ours rather than the exporter's, because the export gives the bodies and the
+   measuring arrows the same class and only the bodies take a fill. */
+.art-icon-shape [class$="__cls-cell"],
+.art-icon-size [class$="__cls-cell"] {
+  fill: var(--background);
+  stroke: var(--accent-2);
+}
 .art-icon-cellularity [class$="__cls-2"],
 .art-icon-clusters [class$="__cls-2"],
 .art-icon-megakaryocytes [class$="__cls-1"],

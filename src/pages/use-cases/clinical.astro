@@ -1,7 +1,6 @@
 ---
 import { Image } from "astro:assets";
 import clinical from "~src/assets/images/useCases/clinical.png";
-import collaboration from "~src/assets/images/useCases/collaboration.webp";
 import remote from "~src/assets/images/useCases/remote-work.png";
 import relabelArtefact from "~src/assets/images/useCases/relabel-artefact.png";
 import relabelDifferential from "~src/assets/images/useCases/relabel-differential.png";
@@ -56,7 +55,7 @@ const ADJUSTABLE = [
       />
       <ContentBlock>
         <h1>Clinical</h1>
-        <p class="ingress">
+        <p>
           Cytomorphology can be both time consuming and subjective. Cellbytes
           helps physicians to find common ground on ambiguous cases by
           pre-classifying thousands of cells automatically, improving your
@@ -98,15 +97,8 @@ const ADJUSTABLE = [
     </ContentBlock>
   </Pair>
 
-  <CellsSection>
+  <CellsSection class="collaboration">
     <H level="2">Collaboration</H>
-    <Image
-      src={collaboration}
-      alt="Two colleagues discussing a wall of printed single-cell images."
-      widths={WIDTHS}
-      height="400"
-      class="collaboration"
-    />
 
     <Pair>
       <ContentBlock>
@@ -117,8 +109,11 @@ const ADJUSTABLE = [
           with your colleague for a second opinion or simply to show an
           interesting case for educational purposes.
         </p>
-        <ConsultDiagram class="art-diagram-consult diagram" />
       </ContentBlock>
+      <ConsultDiagram class="art-diagram-consult diagram" />
+    </Pair>
+
+    <Pair reversed>
       <ContentBlock>
         <H level="3">External collaboration</H>
         <p>
@@ -127,14 +122,14 @@ const ADJUSTABLE = [
           pool. This flexible model helps institutions easily distribute the
           workload during sudden sample surges or staffing shortages.
         </p>
-        <ExternalDiagram class="art-diagram-external diagram" />
       </ContentBlock>
+      <ExternalDiagram class="art-diagram-external diagram" />
     </Pair>
   </CellsSection>
 
   <DecoratedCard variant="bytes" tag="section">
     <H level="2">Integrated with your systems</H>
-    <p class="ingress">
+    <p class="lead">
       Need integration to your LIS, PACS, or EHR? Cellbytes makes it simple to
       share results with your patient registry. Analyzing a slide is just one
       click away. <a href="/contact">Contact us</a> for more information.
@@ -143,7 +138,7 @@ const ADJUSTABLE = [
 
   <Section>
     <H level="2">More control on AI</H>
-    <p class="ingress">
+    <p class="lead">
       No AI is perfect, which is why routine validation and reclassification
       remain essential. Cellbytes can be calibrated with your lab&apos;s own
       samples prior to clinical adoption. Moreover, any errors flagged during
@@ -187,7 +182,7 @@ const ADJUSTABLE = [
 
   <Section class="pricing">
     <H level="2">Pricing for clinical use</H>
-    <p class="ingress">
+    <p class="lead">
       We would love to set a clear price for clinical use, but the needs between
       sample number, database integration needs, storage needs and model
       retraining requirements vary.
@@ -195,46 +190,42 @@ const ADJUSTABLE = [
 
     <Card class="package">
       <H level="3">Clinical package</H>
-      <p>Exact price depends on usage volume and additional services.</p>
+      <p class="blurb">
+        Exact price depends on usage volume and additional services.
+      </p>
       <p class="price">3&ndash;15 &euro;<span class="unit">/slide</span></p>
-      <LinkButton href="/contact">Contact us for an offer</LinkButton>
+      <LinkButton class="cta" href="/contact"
+        >Contact us for an offer</LinkButton
+      >
 
-      <div class="lists">
-        <div>
-          <H level="4">Core package</H>
-          <ul>
-            {CORE_PACKAGE.map((item) => <li>{item}</li>)}
-          </ul>
-        </div>
-        <div>
-          <H level="4">Adjustable</H>
-          <ul>
-            {ADJUSTABLE.map((item) => <li>{item}</li>)}
-          </ul>
-        </div>
-      </div>
+      <H level="4">Core package</H>
+      <ul>
+        {CORE_PACKAGE.map((item) => <li>{item}</li>)}
+      </ul>
+
+      <H level="4">Adjustable</H>
+      <ul>
+        {ADJUSTABLE.map((item) => <li>{item}</li>)}
+      </ul>
     </Card>
   </Section>
 </Layout>
 
 <style>
-  .ingress {
-    font-size: var(--text-size-ingress);
+  /* Section copy sits in a measured column rather than running the full width
+     of the page. */
+  .lead {
     max-width: 60ch;
   }
 
-  .collaboration {
-    width: 100%;
-    max-width: 60em;
-    height: auto;
-    border-radius: var(--element-border-radius);
+  /* The two halves alternate sides, so each diagram reads as belonging to the
+     copy it sits next to rather than to the section as a whole. */
+  .collaboration :global(.pair) {
+    align-items: center;
   }
-
   .diagram {
     width: 100%;
     height: auto;
-    max-width: 32rem;
-    margin-block-start: var(--element-padding);
   }
 
   /* Before, the reclassification, after. The middle frame is the action, so it
@@ -273,14 +264,29 @@ const ADJUSTABLE = [
   .package.package {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 0.5em;
-    max-width: 45rem;
-    background-color: var(--support-pink);
+    width: 100%;
+    max-width: 27rem;
+    background-color: var(--cells-light-pink);
+  }
+  .package :global(h3) {
+    font-size: var(--text-size-body);
+  }
+  /* The two list labels are captions over their lists, not headings competing
+     with the package name above them. */
+  .package :global(h4) {
+    font-size: var(--text-size-body);
+    font-weight: normal;
+    color: var(--text-color-heading);
+    margin-block-start: var(--element-padding);
+  }
+  .blurb {
+    margin-block-end: 0.5em;
   }
 
   .price {
-    font-size: var(--text-size-heading-1);
+    font-size: var(--text-size-heading-2);
     font-weight: bold;
     color: var(--text-color-heading);
   }
@@ -289,14 +295,9 @@ const ADJUSTABLE = [
     font-weight: normal;
   }
 
-  .lists {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--element-padding);
-    padding-block-start: var(--element-padding);
-  }
-  .lists > div {
-    flex: 18rem 1 1;
+  .cta {
+    justify-content: center;
+    background-color: var(--background);
   }
 
   ul {

@@ -1,0 +1,51 @@
+---
+import type { AstroComponentFactory } from "astro/runtime/server/index.js";
+
+export interface Glyph {
+  name: string;
+  icon: AstroComponentFactory;
+  /** The artwork.css class that repaints the icon from theme tokens. */
+  art: string;
+}
+
+interface Props {
+  items: Glyph[];
+}
+const { items } = Astro.props;
+---
+
+<ul class="glyphs">
+  {
+    items.map((item) => (
+      <li>
+        <item.icon class={item.art} />
+        {item.name}
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  /* Two to a row, so a pair of measures reads as a pair and a group of four as
+     a block rather than a long line. The glyphs are drawn at wildly different
+     aspect ratios, so a shared height is what lines them up. */
+  .glyphs {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--element-padding);
+  }
+  .glyphs li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5em;
+  }
+  .glyphs :global(svg) {
+    height: 3.5rem;
+    width: auto;
+    max-width: 100%;
+  }
+</style>

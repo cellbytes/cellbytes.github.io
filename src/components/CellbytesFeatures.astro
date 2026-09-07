@@ -8,20 +8,8 @@ import SufficiencyIcon from "~src/assets/icons/assessments/sample-sufficiency.sv
 
 import Section from "~src/components/Section.astro";
 import H from "~src/components/HeadingLink.astro";
-
-/**
- * A lineage in the cell differential, and the classes reported under it.
- *
- * `dysplasia` marks a lineage the dysplasia assessment covers, which is what
- * the asterisk in the listing means. A member may nest one level further,
- * which is how a neutrophil splits into band and segmented forms.
- */
-interface Lineage {
-  name: string;
-  color: string;
-  dysplasia?: boolean;
-  members: (string | { name: string; members: string[] })[];
-}
+import Glyphs from "~src/components/AssessmentGlyphs.astro";
+import Lineages, { type Lineage } from "~src/components/CellLineages.astro";
 
 // The lineage colors the application paints cell boxes and differentials with,
 // so a reader recognizes the same grouping in the product.
@@ -100,7 +88,10 @@ const PERIPHERAL_BLOOD: Lineage[] = [
   { name: "Artefact", color: OTHER, members: [] },
 ];
 
-/** Dysplasia features, by the lineage they are assessed on. */
+/** The dysplasia features reported on a bone marrow sample. */
+const BM_DYSPLASIA = ["Bilobed nucleus", "Auer rods", "Vacuolated"];
+
+/** On a blood sample the same features are reported per lineage. */
 const PB_DYSPLASIAS = [
   {
     lineage: "Blasts / immature granulocytes",
@@ -138,7 +129,7 @@ const SAMPLE_LEVEL = [
 
 <Section class="features">
   <H level="2">Cellbytes features</H>
-  <p class="ingress">
+  <p class="lead">
     Cellbytes delivers a comprehensive cytomorphological assessment, including
     whole-slide analysis, cell classification, and dysplasia detection. Every
     algorithm is built on high-quality data covering normal and pathological
@@ -149,228 +140,135 @@ const SAMPLE_LEVEL = [
 
   <div class="sample-type">
     <H level="3">1. Bone marrow samples</H>
+    <H level="4" class="label">Cell differentials and dysplasias</H>
 
-    <H level="4">Cell differentials and dysplasias</H>
-    <ul class="lineages">
-      {
-        BONE_MARROW.map((lineage) => (
-          <li style={`--lineage: ${lineage.color}`}>
-            <span class="lineage">
-              {lineage.name}
-              {lineage.dysplasia && " *"}
-            </span>
-            {lineage.members.length > 0 && (
-              <ul>
-                {lineage.members.map((member) =>
-                  typeof member === "string" ? (
-                    <li>{member}</li>
-                  ) : (
-                    <li>
-                      {member.name}
-                      <ul>
-                        {member.members.map((sub) => (
-                          <li>{sub}</li>
-                        ))}
-                      </ul>
-                    </li>
-                  ),
-                )}
-              </ul>
-            )}
-          </li>
-        ))
-      }
-    </ul>
-    <p class="footnote">* Assessed for dysplasia.</p>
+    <div class="split">
+      <Lineages lineages={BONE_MARROW} />
+      <div class="panel">
+        <p class="panel-label">Dysplasia types</p>
+        <ul class="types">
+          {BM_DYSPLASIA.map((type) => <li>{type}</li>)}
+        </ul>
+      </div>
+    </div>
 
-    <dl class="assessments">
+    <div class="assessments">
       <div>
-        <dt>Dysplasia types</dt>
-        <dd>Bilobed nucleus, Auer rods, Vacuolated</dd>
+        <H level="4" class="label">Morphology</H>
+        <Glyphs items={MORPHOLOGY} />
       </div>
       <div>
-        <dt>Morphology</dt>
-        <dd>
-          <ul class="glyphs">
-            {
-              MORPHOLOGY.map((item) => (
-                <li>
-                  <item.icon class={item.art} />
-                  {item.name}
-                </li>
-              ))
-            }
-          </ul>
-        </dd>
+        <H level="4" class="label">Sample-level</H>
+        <Glyphs items={SAMPLE_LEVEL} />
       </div>
-      <div>
-        <dt>Sample-level</dt>
-        <dd>
-          <ul class="glyphs">
-            {
-              SAMPLE_LEVEL.map((item) => (
-                <li>
-                  <item.icon class={item.art} />
-                  {item.name}
-                </li>
-              ))
-            }
-          </ul>
-        </dd>
-      </div>
-    </dl>
+    </div>
   </div>
 
   <div class="sample-type">
     <H level="3">2. Peripheral blood samples</H>
+    <H level="4" class="label">Cell differentials</H>
 
-    <H level="4">Cell differentials</H>
-    <ul class="lineages">
-      {
-        PERIPHERAL_BLOOD.map((lineage) => (
-          <li style={`--lineage: ${lineage.color}`}>
-            <span class="lineage">{lineage.name}</span>
-            {lineage.members.length > 0 && (
-              <ul>
-                {lineage.members.map((member) =>
-                  typeof member === "string" ? (
-                    <li>{member}</li>
-                  ) : (
-                    <li>
-                      {member.name}
-                      <ul>
-                        {member.members.map((sub) => (
-                          <li>{sub}</li>
-                        ))}
-                      </ul>
-                    </li>
-                  ),
-                )}
-              </ul>
-            )}
-          </li>
-        ))
-      }
-    </ul>
-
-    <dl class="assessments">
-      {
-        PB_DYSPLASIAS.map((entry) => (
-          <div>
-            <dt>{entry.lineage}</dt>
-            <dd>{entry.types.join(", ")}</dd>
-          </div>
-        ))
-      }
-      <div>
-        <dt>Morphology</dt>
-        <dd>
-          <ul class="glyphs">
-            {
-              MORPHOLOGY.map((item) => (
-                <li>
-                  <item.icon class={item.art} />
-                  {item.name}
-                </li>
-              ))
-            }
-          </ul>
-        </dd>
+    <div class="split">
+      <Lineages lineages={PERIPHERAL_BLOOD} />
+      <div class="panel">
+        <p class="panel-label">Dysplasias</p>
+        <dl class="types">
+          {
+            PB_DYSPLASIAS.map((entry) => (
+              <div>
+                <dt>{entry.lineage}</dt>
+                <dd>{entry.types.join(", ")}</dd>
+              </div>
+            ))
+          }
+        </dl>
       </div>
-    </dl>
+    </div>
+
+    <div class="assessments">
+      <div>
+        <H level="4" class="label">Morphology</H>
+        <Glyphs items={MORPHOLOGY} />
+      </div>
+    </div>
   </div>
 </Section>
 
 <style>
-  .ingress {
-    font-size: var(--text-size-ingress);
+  .features {
+    gap: calc(2 * var(--element-padding));
+  }
+  .lead {
     max-width: 60ch;
   }
 
   .sample-type {
     width: 100%;
-    max-width: 60em;
+    max-width: 64em;
     margin-inline: auto;
-  }
-  .sample-type + .sample-type {
-    margin-block-start: calc(2 * var(--element-padding));
-  }
-  .sample-type :global(h4) {
-    margin-block: var(--element-padding) 0.5em;
-  }
-
-  /* The lineages read as columns rather than as one long list: the reader is
-     scanning for a class name, not working down an ordered sequence. Each
-     column is only as tall as its own classes, so the accent bar measures the
-     lineage rather than the tallest one on the row. */
-  .lineages {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: var(--element-padding);
-    list-style: none;
-    padding: 0;
-  }
-  .lineages > li {
-    flex: 12rem 1 1;
-    max-width: 18rem;
-    border-inline-start: 4px solid var(--lineage);
-    padding-inline-start: 0.75em;
-  }
-  .lineage {
-    font-weight: bold;
-    color: var(--text-color-heading);
-  }
-  .lineages ul {
-    list-style: none;
-    padding-inline-start: 0.75em;
-  }
-
-  .footnote {
-    font-size: var(--text-size-label);
-    opacity: 0.75;
-  }
-
-  .assessments {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--element-padding);
-    margin-block-start: var(--element-padding);
-  }
-  .assessments > div {
-    flex: 16rem 1 1;
-  }
-  /* A group of glyphs needs more of the row than a line of text does, or its
-     icons wrap into a second row while the text beside them sits half empty. */
-  .assessments > div:has(.glyphs) {
-    flex-grow: 2;
-  }
-  dt {
-    font-weight: bold;
-    color: var(--text-color-heading);
-  }
-
-  /* Each glyph sits above the name of what it measures. They are drawn at
-     wildly different aspect ratios, so a fixed row height rather than a fixed
-     width is what lines them up. */
-  .glyphs {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    gap: var(--element-padding);
-    list-style: none;
-    padding: 0;
-  }
-  .glyphs li {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5em;
-    text-align: center;
+    gap: var(--element-padding);
   }
-  .glyphs :global(svg) {
-    height: 3.5rem;
-    width: auto;
-    max-width: 8rem;
+
+  /* The sub-headings inside a sample type are labels over the block they
+     introduce, in the brand magenta the design uses to separate them from the
+     navy headings above. */
+  .label {
+    font-size: var(--text-size-body);
+  }
+  .label :global(a) {
+    color: var(--logo-magenta);
+  }
+
+  /* Class list beside what the classes look like. Below the breakpoint the
+     panel drops under the list rather than squeezing beside it. */
+  .split {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(13rem, 16rem) 1fr;
+    gap: calc(2 * var(--element-padding));
+    align-items: start;
+  }
+  @media screen and (width < 60em) {
+    .split {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .panel {
+    border: 1px solid var(--bytes-purple);
+    border-radius: var(--element-border-radius);
+    padding: var(--element-padding);
+  }
+  .panel-label {
+    color: var(--accent-2);
+    font-weight: 600;
+    margin-block-end: 0.5em;
+  }
+  .types {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em var(--element-padding);
+  }
+  .types dt {
+    font-weight: 600;
+    color: var(--text-color-heading);
+  }
+  .types dd {
+    margin: 0;
+  }
+
+  /* Morphology and the sample-level measures sit side by side under the
+     classes, each glyph over the name of what it measures. */
+  .assessments {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: calc(2 * var(--element-padding));
+    text-align: center;
   }
 </style>

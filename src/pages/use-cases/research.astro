@@ -10,6 +10,7 @@ import H from "~src/components/HeadingLink.astro";
 import Layout from "~src/layouts/Layout.astro";
 import type { PageMeta } from "~src/utils/opengraph";
 import Card from "~src/components/Card.astro";
+import CellsSection from "~src/components/CellsSection.astro";
 import ContentBlock from "~src/components/ContentBlock.astro";
 import DecoratedCard from "~src/components/DecoratedCard.astro";
 import BytesSection from "~src/components/BytesSection.astro";
@@ -86,7 +87,7 @@ const latest = PUBLICATIONS.slice(0, 2);
       />
       <ContentBlock>
         <h1>Research</h1>
-        <p class="ingress">
+        <p>
           Cellbytes was founded by researchers with the passion to accelerate
           new discoveries using advanced computational tools. Cytomorphology may
           be a classic technique, but we believe to have barely surfaced its
@@ -107,7 +108,7 @@ const latest = PUBLICATIONS.slice(0, 2);
 
   <DecoratedCard variant="bytes" tag="section">
     <H level="2">Morphology for research purposes</H>
-    <p class="ingress">
+    <p class="lead">
       Of all the <a href="/application#cellbytes-features">
         Cellbytes feature assessments
       </a>, morphology is one of the more interesting ones for research.
@@ -163,9 +164,9 @@ const latest = PUBLICATIONS.slice(0, 2);
     </LinkButton>
   </Section>
 
-  <Section class="pricing">
+  <CellsSection class="pricing">
     <H level="2">Pricing for research</H>
-    <p class="ingress">
+    <p class="lead">
       To support academic and industry projects of any scale, Cellbytes offers
       flexible packages, which can be tailored to your specific volume needs.
       Whether you are running a proof-of-concept study or a large-scale clinical
@@ -182,13 +183,20 @@ const latest = PUBLICATIONS.slice(0, 2);
             <H level="3">{tier.name}</H>
             <p class="blurb">{tier.blurb}</p>
             <p class="price">{tier.price}</p>
-            <LinkButton href="/contact">Request an offer</LinkButton>
+            <LinkButton class="cta" href="/contact">
+              Request an offer
+            </LinkButton>
 
             <p class="includes">Includes:</p>
             <p class="slides" set:html={tier.slides} />
             <ul>
               {tier.includes.map((item) => (
-                <li>{item}</li>
+                <li>
+                  <svg width="1em" height="1em" viewBox="0 0 16 16" aria-hidden>
+                    <path d="M2.5 8.5L6 12L13.5 4" />
+                  </svg>
+                  {item}
+                </li>
               ))}
             </ul>
           </Card>
@@ -199,12 +207,13 @@ const latest = PUBLICATIONS.slice(0, 2);
     <LinkButton variant="default-arrow" href="/contact">
       Request a custom offer
     </LinkButton>
-  </Section>
+  </CellsSection>
 </Layout>
 
 <style>
-  .ingress {
-    font-size: var(--text-size-ingress);
+  /* Section copy sits in a measured column rather than running the full width
+     of the page. */
+  .lead {
     max-width: 60ch;
   }
 
@@ -255,6 +264,12 @@ const latest = PUBLICATIONS.slice(0, 2);
     width: auto;
   }
 
+  /* CellsSection lays its children on the page grid, which stretches them to
+     the content column. Only the card row wants that width. */
+  .pricing {
+    justify-items: center;
+  }
+
   .packages {
     display: flex;
     flex-wrap: wrap;
@@ -262,6 +277,7 @@ const latest = PUBLICATIONS.slice(0, 2);
     justify-content: center;
     gap: var(--element-padding);
     width: 100%;
+    z-index: 1;
   }
 
   /* Doubled class to beat Card's own .card { display: flex } rule: the prod
@@ -270,10 +286,11 @@ const latest = PUBLICATIONS.slice(0, 2);
   .package.package {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 0.5em;
     flex: 20rem 1 0;
     max-width: 24rem;
+    background-color: var(--background);
   }
 
   .price {
@@ -282,16 +299,33 @@ const latest = PUBLICATIONS.slice(0, 2);
     color: var(--text-color-heading);
   }
 
+  .cta {
+    justify-content: center;
+  }
+
   /* What a package holds is the part a reader compares across cards, so the
      lists start together rather than each one following its own blurb. */
   .includes {
     padding-block-start: var(--element-padding);
   }
 
+  /* Ticks rather than bullets: every line is something the package grants. */
   ul {
-    padding-inline-start: 1.25em;
+    list-style: none;
+    padding: 0;
   }
   li {
+    display: grid;
+    grid-template-columns: 1.25em auto;
+    gap: 0.5em;
     margin-block-end: 0.25em;
+  }
+  li svg {
+    margin-block-start: 0.35em;
+    fill: none;
+    stroke: var(--text-color-heading);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 </style>
