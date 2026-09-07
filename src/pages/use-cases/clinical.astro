@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import clinical from "~src/assets/images/useCases/clinical.png";
+import collaboration from "~src/assets/images/useCases/collaboration.webp";
 import remote from "~src/assets/images/useCases/remote-work.png";
 import relabelArtefact from "~src/assets/images/useCases/relabel-artefact.png";
 import relabelDifferential from "~src/assets/images/useCases/relabel-differential.png";
@@ -99,6 +100,13 @@ const ADJUSTABLE = [
 
   <CellsSection>
     <H level="2">Collaboration</H>
+    <Image
+      src={collaboration}
+      alt="Two colleagues discussing a wall of printed single-cell images."
+      widths={WIDTHS}
+      height="400"
+      class="collaboration"
+    />
 
     <Pair>
       <ContentBlock>
@@ -143,47 +151,38 @@ const ADJUSTABLE = [
       continually adapts to your specific diagnostic needs.
     </p>
 
-    <figure class="relabel">
-      <div class="steps">
-        <Image
-          src={relabelArtefact}
-          alt="A cell pre-classified as an artefact, outlined in the viewer."
-          widths={[240, 540]}
-          height="266"
-        />
-        <svg
-          class="arrow"
-          width="24"
-          height="24"
-          viewBox="0 0 17 16"
-          aria-hidden
-        >
+    <div class="relabel">
+      <Image
+        src={relabelArtefact}
+        alt="A cell pre-classified as an artefact, outlined in the viewer."
+        widths={[240, 540]}
+        height="266"
+      />
+      <div class="step">
+        <svg width="24" height="24" viewBox="0 0 17 16" aria-hidden>
           <path d="M8.875 1.25L15.625 8L8.875 14.75M14.6875 8H1"></path>
         </svg>
-        <Image
-          src={relabelDifferential}
-          alt="The same cell being dragged onto the myelocyte row of the cell differential."
-          widths={[240, 540]}
-          height="213"
-        />
-        <svg
-          class="arrow"
-          width="24"
-          height="24"
-          viewBox="0 0 17 16"
-          aria-hidden
-        >
-          <path d="M8.875 1.25L15.625 8L8.875 14.75M14.6875 8H1"></path>
-        </svg>
-        <Image
-          src={relabelMyelocyte}
-          alt="The cell after reclassification, now labeled a myelocyte."
-          widths={[240, 540]}
-          height="266"
-        />
+        User input
       </div>
-      <figcaption>Finetuned AI yields better results</figcaption>
-    </figure>
+      <Image
+        src={relabelDifferential}
+        alt="The same cell being dragged onto the myelocyte row of the cell differential."
+        widths={[240, 540]}
+        height="213"
+      />
+      <div class="step">
+        <svg width="24" height="24" viewBox="0 0 17 16" aria-hidden>
+          <path d="M8.875 1.25L15.625 8L8.875 14.75M14.6875 8H1"></path>
+        </svg>
+        Finetuned AI
+      </div>
+      <Image
+        src={relabelMyelocyte}
+        alt="The cell after reclassification, now labeled a myelocyte."
+        widths={[240, 540]}
+        height="266"
+      />
+    </div>
   </Section>
 
   <Section class="pricing">
@@ -224,6 +223,13 @@ const ADJUSTABLE = [
     max-width: 60ch;
   }
 
+  .collaboration {
+    width: 100%;
+    max-width: 60em;
+    height: auto;
+    border-radius: var(--element-border-radius);
+  }
+
   .diagram {
     width: 100%;
     height: auto;
@@ -232,37 +238,33 @@ const ADJUSTABLE = [
   }
 
   /* Before, the reclassification, after. The middle frame is the action, so it
-     sits between the two states rather than under them. */
+     sits between the two states rather than under them, and each arrow names
+     which of the two - the reader or the model - does that step. */
   .relabel {
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--element-padding);
-  }
-  .steps {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     gap: var(--element-padding);
   }
-  .steps :global(img) {
+  .relabel :global(img) {
     height: auto;
     max-width: min(100%, 20rem);
   }
-  .arrow {
-    flex: none;
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5em;
+    color: var(--text-color-heading);
+    font-weight: 600;
+  }
+  .step svg {
     fill: none;
     stroke: var(--accent-2);
     stroke-width: 1.5;
     stroke-linecap: round;
     stroke-linejoin: round;
-  }
-
-  figcaption {
-    color: var(--text-color-heading);
-    font-weight: 600;
   }
 
   /* Doubled class to beat Card's own .card { display: flex } rule: the prod

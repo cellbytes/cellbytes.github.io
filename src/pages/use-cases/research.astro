@@ -1,6 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import coworking from "~src/assets/images/useCases/research.webp";
+import research from "~src/assets/images/useCases/research.png";
 import ShapeIcon from "~src/assets/icons/assessments/shape.svg";
 import SizeIcon from "~src/assets/icons/assessments/size.svg";
 
@@ -24,7 +24,7 @@ export const meta = {
   title: "Research | Cellbytes",
   description:
     "Cytomorphology data for research: morphology measurements, cell-level exports in the formats your analysis expects, and packages that scale from a proof of concept to a full cohort.",
-  card: { title: "Cellbytes for research", image: coworking },
+  card: { title: "Cellbytes for research", image: research },
 } satisfies PageMeta;
 
 /**
@@ -79,8 +79,8 @@ const latest = PUBLICATIONS.slice(0, 2);
   <HeroSection>
     <Pair>
       <Image
-        src={coworking}
-        alt="Two researchers discussing a wall of printed single-cell images."
+        src={research}
+        alt="A man looking at a pinboard filled with research papers."
         widths={WIDTHS}
         height="300"
       />

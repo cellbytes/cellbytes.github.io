@@ -1,6 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import research from "~src/assets/images/research/research.png";
+import library from "~src/assets/images/publications/publications.webp";
 
 import { WIDTHS } from "~src/consts";
 import Section from "~src/components/Section.astro";
@@ -17,7 +17,7 @@ export const meta = {
   title: "Publications | Cellbytes",
   description:
     "Clinically validated models built with hematology laboratories, and the published research behind Cellbytes cytomorphology analysis.",
-  card: { title: "Innovation powered by research", image: research },
+  card: { title: "Innovation powered by research", image: library },
 } satisfies PageMeta;
 ---
 
@@ -25,8 +25,8 @@ export const meta = {
   <HeroSection>
     <Pair>
       <Image
-        src={research}
-        alt="A man looking at a pinboard filled with research papers."
+        src={library}
+        alt="The reading floors of a library, seen from above."
         widths={WIDTHS}
         height="300"
       />

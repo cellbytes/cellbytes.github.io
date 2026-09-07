@@ -1,8 +1,8 @@
 import type { ImageMetadata } from "astro";
-import head from "~src/assets/images/research/head.jpg";
-import icons from "~src/assets/images/research/icons.jpg";
-import neural from "~src/assets/images/research/neural.jpg";
-import pills from "~src/assets/images/research/pills.jpg";
+import head from "~src/assets/images/publications/head.jpg";
+import icons from "~src/assets/images/publications/icons.jpg";
+import neural from "~src/assets/images/publications/neural.jpg";
+import pills from "~src/assets/images/publications/pills.jpg";
 import type { Accent } from "~src/consts";
 
 export interface Publication {
