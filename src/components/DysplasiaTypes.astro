@@ -2,21 +2,24 @@
 import type { ImageMetadata } from "astro";
 import { Image } from "astro:assets";
 
-export interface DysplasiaGroup {
-  /** The cell classes the features below are assessed on. */
-  group: string;
-  /** Folder the example crops for this group live in. */
-  key: string;
-  types: { name: string; key: string }[];
+export interface DysplasiaRow {
+  /**
+   * What the row is about: usually a group of cell classes and the features
+   * found in it, but a feature common to many groups is worth turning around,
+   * so the row is the feature and the captions are the classes.
+   */
+  label: string;
+  /** `key` locates the crop, as `<group>/<feature>`; `name` captions it. */
+  items: { name: string; key: string }[];
 }
 
 interface Props {
-  groups: DysplasiaGroup[];
+  rows: DysplasiaRow[];
 }
-const { groups } = Astro.props;
+const { rows } = Astro.props;
 
-// Example crops, keyed `<group>/<type>`. A type with no crop yet still lists
-// its name, so the section reads correctly before the imagery lands.
+// Example crops, keyed `<group>/<feature>`. An item with no crop yet still
+// shows its caption, so the section reads correctly before the imagery lands.
 const files = import.meta.glob<{ default: ImageMetadata }>(
   "../assets/images/dysplasias/*/*.webp",
   { eager: true },
@@ -33,13 +36,13 @@ for (const path of Object.keys(files)) {
 
 <dl>
   {
-    groups.map((entry) => (
+    rows.map((row) => (
       <div class="group">
-        <dt>{entry.group}</dt>
+        <dt>{row.label}</dt>
         <dd>
           <ul>
-            {entry.types.map((type) => {
-              const image = examples.get(`${entry.key}/${type.key}`);
+            {row.items.map((item) => {
+              const image = examples.get(item.key);
               return (
                 <li>
                   {image && (
@@ -51,7 +54,7 @@ for (const path of Object.keys(files)) {
                       loading="lazy"
                     />
                   )}
-                  <span>{type.name}</span>
+                  <span>{item.name}</span>
                 </li>
               );
             })}

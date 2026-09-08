@@ -150,73 +150,67 @@ const PERIPHERAL_BLOOD: Lineage[] = [
  */
 const BM_DYSPLASIAS = [
   {
-    group: "Blasts / immature granulocytes",
-    key: "blasts_immature_granulocytes",
-    types: [
-      { name: "Bilobed nucleus", key: "abnormal_pmy" },
-      { name: "Auer rods", key: "auer_rods" },
-      { name: "Vacuolated", key: "vacuolated" },
+    label: "Blasts / immature granulocytes",
+    items: [
+      {
+        name: "Bilobed nucleus",
+        key: "blasts_immature_granulocytes/abnormal_pmy",
+      },
+      { name: "Auer rods", key: "blasts_immature_granulocytes/auer_rods" },
     ],
   },
   {
-    group: "Erythroblasts",
-    key: "erythroblasts",
-    types: [
-      { name: "N:C asynchrony", key: "nc_asynchrony_nrbc" },
-      { name: "Dysmorphic", key: "dysmorphic_nrbc" },
-      { name: "Multinucleated", key: "multinuclear_nrbc" },
-      { name: "Vacuolated", key: "vacuolated" },
+    label: "Erythroblasts",
+    items: [
+      { name: "N:C asynchrony", key: "erythroblasts/nc_asynchrony_nrbc" },
+      { name: "Dysmorphic", key: "erythroblasts/dysmorphic_nrbc" },
+      { name: "Multinucleated", key: "erythroblasts/multinuclear_nrbc" },
     ],
   },
   {
-    group: "Megakaryocytes",
-    key: "megakaryocytes",
-    types: [
-      { name: "Separated nuclei", key: "separated_mgk" },
-      { name: "Hypolobated nuclei", key: "hypolobated_mgk" },
+    label: "Megakaryocytes",
+    items: [
+      { name: "Separated nuclei", key: "megakaryocytes/separated_mgk" },
+      { name: "Hypolobated nuclei", key: "megakaryocytes/hypolobated_mgk" },
     ],
   },
   {
-    group: "Mature granulocytes",
-    key: "mature_granulocytes",
-    types: [{ name: "Vacuolated", key: "vacuolated" }],
-  },
-  {
-    group: "Lymphocytes",
-    key: "lymphocytes",
-    types: [{ name: "Vacuolated", key: "vacuolated" }],
-  },
-  {
-    group: "Plasma cells",
-    key: "plasma_cells",
-    types: [{ name: "Vacuolated", key: "vacuolated" }],
+    label: "Vacuolated",
+    items: [
+      {
+        name: "Blasts / immature granulocytes",
+        key: "blasts_immature_granulocytes/vacuolated",
+      },
+      { name: "Erythroblasts", key: "erythroblasts/vacuolated" },
+      { name: "Mature granulocytes", key: "mature_granulocytes/vacuolated" },
+      { name: "Lymphocytes", key: "lymphocytes/vacuolated" },
+      { name: "Plasma cells", key: "plasma_cells/vacuolated" },
+    ],
   },
 ];
 
 const PB_DYSPLASIAS = [
   {
-    group: "Blasts / immature granulocytes",
-    key: "pb_blasts_immature_granulocytes",
-    types: [
-      { name: "Bilobed nucleus", key: "abnormal_pmy" },
-      { name: "Auer rods", key: "auer_rods" },
-      { name: "Vacuolated", key: "vacuolated" },
+    label: "Blasts / immature granulocytes",
+    items: [
+      {
+        name: "Bilobed nucleus",
+        key: "pb_blasts_immature_granulocytes/abnormal_pmy",
+      },
+      { name: "Auer rods", key: "pb_blasts_immature_granulocytes/auer_rods" },
     ],
   },
   {
-    group: "Mature granulocytes",
-    key: "pb_mature_granulocytes",
-    types: [{ name: "Vacuolated", key: "vacuolated" }],
-  },
-  {
-    group: "Lymphocytes",
-    key: "pb_lymphocytes",
-    types: [{ name: "Vacuolated", key: "vacuolated" }],
-  },
-  {
-    group: "Plasma cells",
-    key: "pb_plasma_cells",
-    types: [{ name: "Vacuolated", key: "vacuolated" }],
+    label: "Vacuolated",
+    items: [
+      {
+        name: "Blasts / immature granulocytes",
+        key: "pb_blasts_immature_granulocytes/vacuolated",
+      },
+      { name: "Mature granulocytes", key: "pb_mature_granulocytes/vacuolated" },
+      { name: "Lymphocytes", key: "pb_lymphocytes/vacuolated" },
+      { name: "Plasma cells", key: "pb_plasma_cells/vacuolated" },
+    ],
   },
 ];
 
@@ -263,7 +257,7 @@ const SAMPLE_LEVEL = [
     <CellClasses id="bm" lineages={BONE_MARROW} />
 
     <h4 class="label">Dysplasias</h4>
-    <Dysplasias groups={BM_DYSPLASIAS} />
+    <Dysplasias rows={BM_DYSPLASIAS} />
 
     <div class="assessments">
       <div>
@@ -284,7 +278,7 @@ const SAMPLE_LEVEL = [
     <CellClasses id="pb" lineages={PERIPHERAL_BLOOD} />
 
     <h4 class="label">Dysplasias</h4>
-    <Dysplasias groups={PB_DYSPLASIAS} />
+    <Dysplasias rows={PB_DYSPLASIAS} />
 
     <div class="assessments">
       <div>
