@@ -215,6 +215,79 @@ const panelId = (key: string) => `${id}-panel-${key}`;
         select(next);
       });
     });
+
+    /**
+     * Show as many rows of crops as fit beside the class list.
+     *
+     * The list is the taller, fixed thing on the row - its height is just the
+     * number of classes - so it sets how much room the gallery has. Rows are
+     * whole crops, so the fit is rarely exact; the leftover is absorbed by the
+     * panel stretching to the row rather than left as a ragged edge.
+     *
+     * Columns are the container query's business, not this function's. It only
+     * decides how far down to fill them.
+     */
+    const list = root.querySelector<HTMLElement>(".lineages");
+    const panel = root.querySelector<HTMLElement>(".panel");
+
+    function fitRows() {
+      const grid = panel?.querySelector<HTMLElement>(".grid:not([hidden])");
+      if (!list || !panel || !grid) return;
+
+      const items = [...grid.querySelectorAll<HTMLElement>("li")];
+      if (items.length === 0) return;
+      // Measure against every crop present, or the reading would be of
+      // whatever the last pass happened to leave visible.
+      for (const item of items) item.hidden = false;
+
+      const styles = getComputedStyle(grid);
+      const columns = styles.gridTemplateColumns.split(" ").length;
+      const gap = parseFloat(styles.rowGap) || 0;
+      const rowHeight = items[0]!.getBoundingClientRect().height + gap;
+      if (rowHeight <= gap) return;
+
+      // Room is measured from where the grid starts to where the panel ends,
+      // less whatever sits below it. The panel's own height cannot be the
+      // starting point: it is pinned to the list and clips, so it no longer
+      // grows with the crops it holds.
+      const panelBox = panel.getBoundingClientRect();
+      const panelStyles = getComputedStyle(panel);
+      const extra = panel.querySelector<HTMLElement>(".extra");
+      const below = extra
+        ? extra.getBoundingClientRect().height +
+          parseFloat(getComputedStyle(extra).marginTop || "0")
+        : 0;
+      const room =
+        panelBox.bottom -
+        grid.getBoundingClientRect().top -
+        parseFloat(panelStyles.paddingBottom || "0") -
+        parseFloat(panelStyles.borderBottomWidth || "0") -
+        below;
+      const rows = Math.max(1, Math.floor((room + gap) / rowHeight));
+
+      const visible = Math.min(items.length, rows * columns);
+      for (const [index, item] of items.entries())
+        item.hidden = index >= visible;
+    }
+
+    // Width is what changes the answer: it sets the column count and the crop
+    // size. Reacting to height as well would mean reacting to this function's
+    // own effect, so the observer ignores it.
+    let lastWidth = 0;
+    new ResizeObserver((entries) => {
+      const width = entries[0]?.contentRect.width ?? 0;
+      if (Math.abs(width - lastWidth) < 1) return;
+      lastWidth = width;
+      fitRows();
+    }).observe(root);
+
+    for (const tab of tabs) tab.addEventListener("click", fitRows);
+    for (const tab of tabs) tab.addEventListener("mouseenter", fitRows);
+    // Crops are lazy and the webfont decides the list's height, so the first
+    // measurement is taken again once both have settled.
+    addEventListener("load", fitRows);
+    document.fonts?.ready.then(fitRows);
+    fitRows();
   }
 </script>
 
@@ -231,10 +304,9 @@ const panelId = (key: string) => `${id}-panel-${key}`;
     width: 100%;
     display: grid;
     grid-template-columns:
-      minmax(12rem, 22%)
-      minmax(min(60%, 15rem), 47rem);
+      minmax(10rem, 22%)
+      minmax(min(60%, 10rem), 47rem);
     justify-content: center;
-    align-items: start;
   }
 
   /* One column down the page, each lineage measured by its own accent bar so
@@ -300,7 +372,15 @@ const panelId = (key: string) => `${id}-panel-${key}`;
     border: var(--padding) solid var(--bytes-purple);
     border-radius: calc(var(--element-border-radius) * 1.5);
     padding: var(--padding);
-    height: 100%;
+
+    /* The class list sets the height of the row and the panel matches it: zero
+       height keeps the panel out of the row's own sizing, the minimum then
+       fills whatever the list asked for, and anything that does not fit is
+       clipped. That alone keeps the two columns level without script; the
+       script only trims the row left half-showing at the bottom. */
+    height: 0;
+    min-height: 100%;
+    overflow: hidden;
 
     /* The gallery sizes itself against the panel rather than the viewport:
        how much room it has depends on the class list beside it, not on how
@@ -327,26 +407,14 @@ const panelId = (key: string) => `${id}-panel-${key}`;
     gap: 0.5em;
     padding: 0;
   }
-  .grid li {
-    display: none;
-  }
-  .grid li:nth-child(-n + 4) {
-    display: block;
-  }
-  @container (min-width: 21rem) {
+  @container (min-width: 17rem) {
     .grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .grid li:nth-child(-n + 8) {
-      display: block;
     }
   }
   @container (min-width: 32rem) {
     .grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-    .grid li:nth-child(-n + 12) {
-      display: block;
     }
   }
   /* `display: grid` above outranks the user-agent rule behind the attribute,
