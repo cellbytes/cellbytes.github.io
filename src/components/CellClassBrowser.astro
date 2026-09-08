@@ -56,6 +56,13 @@ const flat = lineages.flatMap((lineage) => [
 const shown = flat.filter((member) => examples.has(member.key));
 const first = shown[0]?.key;
 
+/**
+ * Three columns of four is the widest the gallery ever gets, so shipping more
+ * than that would be markup no layout can reach. Narrower panels drop to two
+ * columns or one and hide the rest from there.
+ */
+const MAX_EXAMPLES = 12;
+
 const tabId = (key: string) => `${id}-tab-${key}`;
 const panelId = (key: string) => `${id}-panel-${key}`;
 ---
@@ -92,10 +99,7 @@ const panelId = (key: string) => `${id}-panel-${key}`;
               {lineage.name}
             </button>
           ) : (
-            <p class="lineage-name">
-              {lineage.name}
-              {lineage.dysplasia && " *"}
-            </p>
+            <p class="lineage-name"> {lineage.name} </p>
           )}
           <ul role="presentation">
             {lineage.members.map((member) =>
@@ -160,24 +164,23 @@ const panelId = (key: string) => `${id}-panel-${key}`;
           aria-label={`Example ${member.name.toLowerCase()} cells`}
           hidden={member.key !== first}
         >
-          {examples.get(member.key)!.map((image) => (
-            <li>
-              <Image
-                src={image}
-                alt=""
-                width={160}
-                height={160}
-                loading="lazy"
-              />
-            </li>
-          ))}
+          {examples
+            .get(member.key)!
+            .slice(0, MAX_EXAMPLES)
+            .map((image) => (
+              <li>
+                <Image
+                  src={image}
+                  alt=""
+                  width={160}
+                  height={160}
+                  loading="lazy"
+                />
+              </li>
+            ))}
         </ul>
       ))
     }
-
-    <div class="extra">
-      <slot />
-    </div>
   </div>
 </div>
 
@@ -216,18 +219,22 @@ const panelId = (key: string) => `${id}-panel-${key}`;
 </script>
 
 <style>
+  /* The panel stays beside the class list at every width. Stacked, the list
+     would read as a menu with nothing to do with what sits under it, so the
+     list gives up width instead of the pair ever wrapping.
+     
+     The list is a share of the row rather than a fixed column: pinned to a rem
+     ceiling it sat at one width across most of the range and only gave way at
+     phone sizes, which read as though it were not responsive at all. It still
+     stops shrinking at 7rem, where the class names start to wrap. */
   .browser {
     width: 100%;
     display: grid;
-    grid-template-columns: minmax(14rem, 18rem) minmax(0, 47rem);
+    grid-template-columns:
+      minmax(12rem, 22%)
+      minmax(min(60%, 15rem), 47rem);
     justify-content: center;
-    gap: calc(2 * var(--element-padding));
     align-items: start;
-  }
-  @media screen and (width < 60em) {
-    .browser {
-      grid-template-columns: 1fr;
-    }
   }
 
   /* One column down the page, each lineage measured by its own accent bar so
@@ -236,6 +243,7 @@ const panelId = (key: string) => `${id}-panel-${key}`;
     display: flex;
     flex-direction: column;
     gap: 0.75em;
+    padding-bottom: 1rem;
   }
   .lineage {
     border-inline-start: 3px solid var(--lineage);
@@ -250,6 +258,7 @@ const panelId = (key: string) => `${id}-panel-${key}`;
   ul {
     list-style: none;
     padding-inline-start: 0.75em;
+    font-size: var(--text-size-body);
   }
   .lineage > ul {
     padding-inline-start: 0;
@@ -262,10 +271,11 @@ const panelId = (key: string) => `${id}-panel-${key}`;
   [role="tab"] {
     display: block;
     padding: 0.1em 0.4em;
-    border-radius: var(--tiny-border-radius);
+    margin-inline-start: 0.4em;
+    border-bottom-left-radius: var(--tiny-border-radius);
+    border-top-left-radius: var(--tiny-border-radius);
   }
   [role="tab"] {
-    font: inherit;
     color: var(--text-color-body);
     text-align: start;
     width: 100%;
@@ -286,21 +296,58 @@ const panelId = (key: string) => `${id}-panel-${key}`;
      the bytes artwork uses, which is what holds the examples together as one
      block beside the class list. */
   .panel {
-    border: 1.25rem solid var(--bytes-purple);
-    border-radius: var(--element-border-radius);
-    padding: var(--element-padding);
+    --padding: 1.25rem;
+    border: var(--padding) solid var(--bytes-purple);
+    border-radius: calc(var(--element-border-radius) * 1.5);
+    padding: var(--padding);
+    height: 100%;
+
+    /* The gallery sizes itself against the panel rather than the viewport:
+       how much room it has depends on the class list beside it, not on how
+       wide the window happens to be. */
+    container-type: inline-size;
+  }
+  @media screen and (width < 45em) {
+    .panel {
+      --padding: 0.5rem;
+    }
   }
   .panel-label {
     color: var(--accent-2);
     font-weight: 600;
-    margin-block-end: 0.75em;
+    margin-block-end: 0.5em;
   }
 
+  /* One to three columns, four cells down each of them. Past that the grid
+     would either shrink the crops below the point of being examples, or run on
+     down the page well past the class list it belongs to. */
   .grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: 1fr;
     gap: 0.5em;
     padding: 0;
+  }
+  .grid li {
+    display: none;
+  }
+  .grid li:nth-child(-n + 4) {
+    display: block;
+  }
+  @container (min-width: 21rem) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .grid li:nth-child(-n + 8) {
+      display: block;
+    }
+  }
+  @container (min-width: 32rem) {
+    .grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .grid li:nth-child(-n + 12) {
+      display: block;
+    }
   }
   /* `display: grid` above outranks the user-agent rule behind the attribute,
      so the hidden panels need saying again here. */
