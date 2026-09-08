@@ -252,17 +252,11 @@ const panelId = (key: string) => `${id}-panel-${key}`;
       // grows with the crops it holds.
       const panelBox = panel.getBoundingClientRect();
       const panelStyles = getComputedStyle(panel);
-      const extra = panel.querySelector<HTMLElement>(".extra");
-      const below = extra
-        ? extra.getBoundingClientRect().height +
-          parseFloat(getComputedStyle(extra).marginTop || "0")
-        : 0;
       const room =
         panelBox.bottom -
         grid.getBoundingClientRect().top -
         parseFloat(panelStyles.paddingBottom || "0") -
-        parseFloat(panelStyles.borderBottomWidth || "0") -
-        below;
+        parseFloat(panelStyles.borderBottomWidth || "0");
       const rows = Math.max(1, Math.floor((room + gap) / rowHeight));
 
       const visible = Math.min(items.length, rows * columns);
@@ -323,6 +317,7 @@ const panelId = (key: string) => `${id}-panel-${key}`;
   }
   .lineage-name {
     color: var(--text-color-heading);
+    font-weight: 600;
   }
   button.lineage-name {
     color: var(--text-color-heading);
@@ -423,9 +418,6 @@ const panelId = (key: string) => `${id}-panel-${key}`;
     display: none;
   }
 
-  .extra {
-    margin-block-start: var(--element-padding);
-  }
   .grid :global(img) {
     width: 100%;
     height: auto;

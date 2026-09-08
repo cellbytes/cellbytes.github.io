@@ -151,29 +151,73 @@ const PERIPHERAL_BLOOD: Lineage[] = [
 const BM_DYSPLASIAS = [
   {
     group: "Blasts / immature granulocytes",
-    types: ["Bilobed nucleus", "Auer rods", "Vacuolated"],
+    key: "blasts_immature_granulocytes",
+    types: [
+      { name: "Bilobed nucleus", key: "abnormal_pmy" },
+      { name: "Auer rods", key: "auer_rods" },
+      { name: "Vacuolated", key: "vacuolated" },
+    ],
   },
   {
     group: "Erythroblasts",
-    types: ["N:C asynchrony", "Dysmorphic", "Multinucleated", "Vacuolated"],
+    key: "erythroblasts",
+    types: [
+      { name: "N:C asynchrony", key: "nc_asynchrony_nrbc" },
+      { name: "Dysmorphic", key: "dysmorphic_nrbc" },
+      { name: "Multinucleated", key: "multinuclear_nrbc" },
+      { name: "Vacuolated", key: "vacuolated" },
+    ],
   },
   {
     group: "Megakaryocytes",
-    types: ["Separated nuclei", "Hypolobated nuclei"],
+    key: "megakaryocytes",
+    types: [
+      { name: "Separated nuclei", key: "separated_mgk" },
+      { name: "Hypolobated nuclei", key: "hypolobated_mgk" },
+    ],
   },
-  { group: "Mature granulocytes", types: ["Vacuolated"] },
-  { group: "Lymphocytes", types: ["Vacuolated"] },
-  { group: "Plasma cells", types: ["Vacuolated"] },
+  {
+    group: "Mature granulocytes",
+    key: "mature_granulocytes",
+    types: [{ name: "Vacuolated", key: "vacuolated" }],
+  },
+  {
+    group: "Lymphocytes",
+    key: "lymphocytes",
+    types: [{ name: "Vacuolated", key: "vacuolated" }],
+  },
+  {
+    group: "Plasma cells",
+    key: "plasma_cells",
+    types: [{ name: "Vacuolated", key: "vacuolated" }],
+  },
 ];
 
 const PB_DYSPLASIAS = [
   {
     group: "Blasts / immature granulocytes",
-    types: ["Bilobed nucleus", "Auer rods", "Vacuolated"],
+    key: "pb_blasts_immature_granulocytes",
+    types: [
+      { name: "Bilobed nucleus", key: "abnormal_pmy" },
+      { name: "Auer rods", key: "auer_rods" },
+      { name: "Vacuolated", key: "vacuolated" },
+    ],
   },
-  { group: "Mature granulocytes", types: ["Vacuolated"] },
-  { group: "Lymphocytes", types: ["Vacuolated"] },
-  { group: "Plasma cells", types: ["Vacuolated"] },
+  {
+    group: "Mature granulocytes",
+    key: "pb_mature_granulocytes",
+    types: [{ name: "Vacuolated", key: "vacuolated" }],
+  },
+  {
+    group: "Lymphocytes",
+    key: "pb_lymphocytes",
+    types: [{ name: "Vacuolated", key: "vacuolated" }],
+  },
+  {
+    group: "Plasma cells",
+    key: "pb_plasma_cells",
+    types: [{ name: "Vacuolated", key: "vacuolated" }],
+  },
 ];
 
 /**
@@ -214,20 +258,20 @@ const SAMPLE_LEVEL = [
 
   <div class="sample-type">
     <H level="3">1. Bone marrow samples</H>
-    <H level="4" class="label">Cell differentials and dysplasias</H>
+    <h4 class="label">Cell differentials and dysplasias</h4>
 
-    <CellClasses id="bm" lineages={BONE_MARROW}>
-      <p class="panel-label">Dysplasia types</p>
-      <Dysplasias groups={BM_DYSPLASIAS} />
-    </CellClasses>
+    <CellClasses id="bm" lineages={BONE_MARROW} />
+
+    <h4 class="label">Dysplasias</h4>
+    <Dysplasias groups={BM_DYSPLASIAS} />
 
     <div class="assessments">
       <div>
-        <H level="4" class="label">Morphology</H>
+        <h4 class="label">Morphology</h4>
         <Glyphs items={MORPHOLOGY} />
       </div>
       <div>
-        <H level="4" class="label">Sample-level</H>
+        <h4 class="label">Sample-level</h4>
         <Glyphs items={SAMPLE_LEVEL} />
       </div>
     </div>
@@ -235,16 +279,16 @@ const SAMPLE_LEVEL = [
 
   <div class="sample-type">
     <H level="3">2. Peripheral blood samples</H>
-    <H level="4" class="label">Cell differentials</H>
+    <h4 class="label">Cell differentials</h4>
 
-    <CellClasses id="pb" lineages={PERIPHERAL_BLOOD}>
-      <p class="panel-label">Dysplasia types</p>
-      <Dysplasias groups={PB_DYSPLASIAS} />
-    </CellClasses>
+    <CellClasses id="pb" lineages={PERIPHERAL_BLOOD} />
+
+    <h4 class="label">Dysplasias</h4>
+    <Dysplasias groups={PB_DYSPLASIAS} />
 
     <div class="assessments">
       <div>
-        <H level="4" class="label">Morphology</H>
+        <h4 class="label">Morphology</h4>
         <Glyphs items={MORPHOLOGY} />
       </div>
     </div>
@@ -274,19 +318,11 @@ const SAMPLE_LEVEL = [
      navy headings above. */
   .label {
     font-size: var(--text-size-body);
-  }
-  .label :global(a) {
     color: var(--logo-magenta);
   }
 
   /* Morphology and the sample-level measures sit side by side under the
      classes, each glyph over the name of what it measures. */
-  .panel-label {
-    color: var(--accent-2);
-    font-weight: 600;
-    margin-block-end: 0.5em;
-  }
-
   .assessments {
     display: flex;
     flex-wrap: wrap;
