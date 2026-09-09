@@ -151,7 +151,7 @@ const ADJUSTABLE = [
         src={relabelArtefact}
         alt="A cell pre-classified as an artefact, outlined in the viewer."
         widths={[240, 540]}
-        height="266"
+        height="240"
       />
       <div class="step">
         <svg width="24" height="24" viewBox="0 0 17 16" aria-hidden>
@@ -163,7 +163,7 @@ const ADJUSTABLE = [
         src={relabelDifferential}
         alt="The same cell being dragged onto the myelocyte row of the cell differential."
         widths={[240, 540]}
-        height="213"
+        height="240"
       />
       <div class="step">
         <svg width="24" height="24" viewBox="0 0 17 16" aria-hidden>
@@ -175,7 +175,7 @@ const ADJUSTABLE = [
         src={relabelMyelocyte}
         alt="The cell after reclassification, now labeled a myelocyte."
         widths={[240, 540]}
-        height="266"
+        height="240"
       />
     </div>
   </Section>
@@ -241,10 +241,6 @@ const ADJUSTABLE = [
     justify-content: center;
     gap: var(--element-padding);
   }
-  .relabel :global(img) {
-    height: auto;
-    max-width: min(100%, 20rem);
-  }
   .step {
     display: flex;
     flex-direction: column;
@@ -259,6 +255,19 @@ const ADJUSTABLE = [
     stroke-width: 1.5;
     stroke-linecap: round;
     stroke-linejoin: round;
+  }
+
+  /* The three frames stop fitting across the column at this width, and wrapping
+     them breaks the sequence into a ragged two-and-one that no longer reads in
+     order. Running it down the page instead keeps the order, so the arrows turn
+     to point the way it is now read. */
+  @media screen and (width < 81em) {
+    .relabel {
+      flex-direction: column;
+    }
+    .step svg {
+      rotate: 90deg;
+    }
   }
 
   /* Doubled class to beat Card's own .card { display: flex } rule: the prod
