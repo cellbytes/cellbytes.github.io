@@ -83,7 +83,7 @@ const BONE_MARROW: Lineage[] = [
     color: OTHER,
     members: [
       { name: "Artefact", key: "bm_artefact" },
-      { name: "Megakaryocyte *", key: "bm_megakaryocyte" },
+      { name: "Megakaryocyte", key: "bm_megakaryocyte" },
     ],
   },
 ];
@@ -240,58 +240,73 @@ const SAMPLE_LEVEL = [
 ---
 
 <Section class="features">
-  <H level="2">Cellbytes features</H>
-  <p class="lead">
-    Cellbytes delivers a comprehensive cytomorphological assessment, including
-    whole-slide analysis, cell classification, and dysplasia detection. Every
-    algorithm is built on high-quality data covering normal and pathological
-    varieties, cutting-edge research and validated by robust scientific and
-    clinical metrics. By trusting Cellbytes, you will receive an extensive data
-    package.
-  </p>
+  <section class="subsection">
+    <H level="2">Cellbytes features</H>
+    <p class="lead">
+      Cellbytes delivers a comprehensive cytomorphological assessment, including
+      whole-slide analysis, cell classification, and dysplasia detection. Every
+      algorithm is built on high-quality data covering normal and pathological
+      varieties, cutting-edge research and validated by robust scientific and
+      clinical metrics. By trusting Cellbytes, you will receive an extensive
+      data package.
+    </p>
+  </section>
 
   <div class="sample-type">
-    <H level="3">1. Bone marrow samples</H>
-    <h4 class="label">Cell differentials and dysplasias</h4>
+    <H level="3">Bone marrow samples</H>
 
-    <CellClasses id="bm" lineages={BONE_MARROW} />
+    <section class="subsection">
+      <H level="4" class="label">Cell differentials and dysplasias</H>
+      <CellClasses id="bm" lineages={BONE_MARROW} />
+    </section>
 
-    <h4 class="label">Dysplasias</h4>
-    <Dysplasias rows={BM_DYSPLASIAS} />
+    <section class="subsection">
+      <h4 class="label">Dysplasias</h4>
+      <Dysplasias rows={BM_DYSPLASIAS} />
+    </section>
 
     <div class="assessments">
-      <div>
-        <h4 class="label">Morphology</h4>
+      <section class="subsection">
+        <H level="4" class="label">Morphology</H>
         <Glyphs items={MORPHOLOGY} />
-      </div>
-      <div>
-        <h4 class="label">Sample-level</h4>
+      </section>
+      <section class="subsection">
+        <H level="4" class="label">Sample-level</H>
         <Glyphs items={SAMPLE_LEVEL} />
-      </div>
+      </section>
     </div>
   </div>
 
   <div class="sample-type">
-    <H level="3">2. Peripheral blood samples</H>
-    <h4 class="label">Cell differentials</h4>
+    <H level="3">Peripheral blood samples</H>
 
-    <CellClasses id="pb" lineages={PERIPHERAL_BLOOD} />
+    <section class="subsection">
+      <H level="4" class="label">Cell differentials</H>
+      <CellClasses id="pb" lineages={PERIPHERAL_BLOOD} />
+    </section>
 
-    <h4 class="label">Dysplasias</h4>
-    <Dysplasias rows={PB_DYSPLASIAS} />
+    <section class="subsection">
+      <H level="4" class="label">Dysplasias</H>
+      <Dysplasias rows={PB_DYSPLASIAS} />
+    </section>
 
-    <div class="assessments">
-      <div>
-        <h4 class="label">Morphology</h4>
-        <Glyphs items={MORPHOLOGY} />
-      </div>
-    </div>
+    <section class="subsection">
+      <H level="4" class="label">Morphology</H>
+      <Glyphs items={MORPHOLOGY} />
+    </section>
   </div>
 </Section>
 
 <style>
   .features {
-    gap: calc(2 * var(--element-padding));
+    gap: calc(4 * var(--element-padding));
+  }
+  .subsection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--element-padding);
+    width: 100%;
   }
   .lead {
     max-width: 60ch;
@@ -304,14 +319,13 @@ const SAMPLE_LEVEL = [
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--element-padding);
+    gap: calc(2 * var(--element-padding));
   }
 
   /* The sub-headings inside a sample type are labels over the block they
      introduce, in the brand magenta the design uses to separate them from the
      navy headings above. */
   .label {
-    font-size: var(--text-size-body);
     color: var(--logo-magenta);
   }
 
@@ -323,5 +337,9 @@ const SAMPLE_LEVEL = [
     justify-content: center;
     gap: calc(2 * var(--element-padding));
     text-align: center;
+
+    .subsection {
+      width: auto;
+    }
   }
 </style>

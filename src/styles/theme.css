@@ -61,7 +61,8 @@
   /* Text sizes */
   --text-size-heading-1: 4rem;
   --text-size-heading-2: 3rem;
-  --text-size-heading-3: 1.5rem;
+  --text-size-heading-3: 2rem;
+  --text-size-heading-4: 1.5rem;
   --text-size-ingress: 1.5rem;
   --text-size-body: 1.125rem;
   --text-size-link: 1.125rem;
@@ -86,7 +87,6 @@
   :root {
     --text-size-heading-1: 3rem;
     --text-size-heading-2: 2rem;
-    --text-size-heading-3: 1.5rem;
     --text-size-ingress: 1.25rem;
 
     --block-padding: 8rem;
@@ -97,7 +97,6 @@
   :root {
     --text-size-heading-1: 2.5rem;
     --text-size-heading-2: 2rem;
-    --text-size-heading-3: 1.5rem;
     --element-padding: 1rem;
     --element-border-radius: 1rem;
 
@@ -147,6 +146,10 @@ h3 {
   line-height: 1.1;
 }
 
+h4 {
+  font-size: var(--text-size-heading-4);
+}
+
 p {
   color: var(--text-color-body);
   font-size: var(--text-size-body);
@@ -162,6 +165,7 @@ p a:not([class]) {
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
 }
+
 p a:not([class]):hover {
   text-decoration-thickness: 2px;
 }
@@ -190,7 +194,7 @@ p a:not([class]):hover {
   gap: 1rem;
 }
 
-.text > p {
+.text>p {
   max-width: 55ch;
 }
 

@@ -298,7 +298,7 @@ const panelId = (key: string) => `${id}-panel-${key}`;
     width: 100%;
     display: grid;
     grid-template-columns:
-      minmax(10rem, 22%)
+      minmax(11rem, 22%)
       minmax(min(60%, 10rem), 47rem);
     justify-content: center;
   }
@@ -309,7 +309,7 @@ const panelId = (key: string) => `${id}-panel-${key}`;
     display: flex;
     flex-direction: column;
     gap: 0.75em;
-    padding-bottom: 1rem;
+    padding-block: 1rem;
   }
   .lineage {
     border-inline-start: 3px solid var(--lineage);
@@ -399,7 +399,7 @@ const panelId = (key: string) => `${id}-panel-${key}`;
   .grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 0.5em;
+    gap: var(--padding);
     padding: 0;
   }
   @container (min-width: 17rem) {

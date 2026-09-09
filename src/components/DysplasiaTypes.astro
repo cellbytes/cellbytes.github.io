@@ -45,7 +45,7 @@ for (const path of Object.keys(files)) {
               const image = examples.get(item.key);
               return (
                 <li>
-                  {image && (
+                  {image ? (
                     <Image
                       src={image}
                       alt=""
@@ -53,6 +53,8 @@ for (const path of Object.keys(files)) {
                       height={160}
                       loading="lazy"
                     />
+                  ) : (
+                    <div class="pending" />
                   )}
                   <span>{item.name}</span>
                 </li>
@@ -66,35 +68,35 @@ for (const path of Object.keys(files)) {
 </dl>
 
 <style>
+  /* Every group shares this one grid rather than laying out its own, so the
+     label column is as wide as the widest label and the examples of each row
+     start on the same axis. A group with its own grid would size that column to
+     its own label, and the one name long enough to wrap would step its whole
+     row out of line with the others. */
   dl {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 2rem 1fr;
     gap: var(--element-padding);
+    align-items: center;
     margin: 0;
     width: 100%;
   }
 
   .group {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: var(--element-padding);
-    align-items: center;
+    display: contents;
   }
 
   /* The group runs up the side of its own examples rather than sitting above
      them, which is what keeps a row of one crop from reading as a caption for
      the row above it. */
   dt {
-    writing-mode: vertical-rl;
-    rotate: 180deg;
+    rotate: -90deg;
     justify-self: center;
     text-align: center;
-    font-weight: 600;
+    font-weight: 700;
+    line-height: 1;
     color: var(--accent-2);
-    /* Turned on its side the inline axis runs down the page, so this is what
-       wraps a long group name onto a second line instead of letting it set the
-       height of its own row. */
-    max-inline-size: 8rem;
+    width: 8rem;
   }
   dd {
     margin: 0;
@@ -119,5 +121,19 @@ for (const path of Object.keys(files)) {
     height: auto;
     border-radius: var(--small-border-radius);
     display: block;
+  }
+
+  /* An item whose crop the reference slides did not hold still occupies the
+     image slot, so it does not pull its own caption up out of the line the rest
+     of the row's captions sit on. */
+  .pending {
+    aspect-ratio: 1;
+  }
+
+  /* A name too long for its column wraps, and the row is read across rather
+     than down, so the two lines want to stay one label rather than open up into
+     the spacing body copy uses. */
+  li span {
+    line-height: 1.2;
   }
 </style>
