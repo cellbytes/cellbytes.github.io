@@ -28,16 +28,39 @@ export const meta = {
   card: { title: "Cellbytes for research", image: research },
 } satisfies PageMeta;
 
+/** What an industrial licence costs against the academic rate for the same work. */
+const INDUSTRIAL_RATE = 1.5;
+
+/** Thousands are spaced rather than grouped with a comma, as the design sets them. */
+const amount = (euros: number) =>
+  String(euros).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+
 /**
- * Academic packages, smallest first. Prices are per package rather than per
- * slide, which is what separates these from the clinical license.
+ * Core is sold by volume, so its price is a step on this scale rather than one
+ * figure. The largest step is what the card shows until a choice is made,
+ * which keeps the three cards reading smallest to largest at rest.
+ */
+const CORE_STEPS = [
+  { slides: 200, academic: 6500 },
+  { slides: 400, academic: 7500 },
+  { slides: 600, academic: 8000 },
+  { slides: 800, academic: 9000 },
+  { slides: 1000, academic: 10000 },
+];
+
+/**
+ * The packages, smallest first. Prices are per package rather than per slide,
+ * which is what separates these from the clinical license. `academic` is the
+ * academic rate and null where the package is quoted rather than priced;
+ * `limit` is the slide ceiling, null where there is none.
  */
 const PACKAGES = [
   {
     name: "Light",
     blurb: "Simple and concise analysis of a small batch of samples.",
-    price: "5 000 €",
-    slides: "up to <strong>100</strong> slides",
+    academic: 5000,
+    limit: 100,
+    steps: null,
     includes: [
       "1 Tb image storage for 1 year",
       "Sample and image analysis viewing",
@@ -47,8 +70,9 @@ const PACKAGES = [
   {
     name: "Core",
     blurb: "A sizable set of samples to analyze in one go.",
-    price: "10 000 €",
-    slides: "up to <strong>1 000</strong> slides",
+    academic: null,
+    limit: null,
+    steps: CORE_STEPS,
     includes: [
       "10 Tb image storage for 1 year",
       "Sample and image analysis viewing",
@@ -59,8 +83,9 @@ const PACKAGES = [
   {
     name: "Advanced",
     blurb: "Expanding beyond routine sample analysis for bigger cohorts.",
-    price: "custom",
-    slides: "No sample limits",
+    academic: null,
+    limit: null,
+    steps: null,
     includes: [
       "Image storage for 1 year",
       "Sample and image analysis viewing",
@@ -157,7 +182,6 @@ const latest = PUBLICATIONS.slice(0, 2);
 
   <Section>
     <H level="2">Related publications</H>
-    <p>See the latest publications related to Cellbytes.</p>
     {latest.map((publication) => <PublicationCard publication={publication} />)}
     <LinkButton variant="default-arrow" href="/publications">
       All publications
@@ -178,23 +202,92 @@ const latest = PUBLICATIONS.slice(0, 2);
   </Section>
 
   <CellsSection class="packages-band">
+    <div class="audience-row">
+      <div class="audience" role="group" aria-label="Show prices for">
+        <button type="button" data-audience="academic" aria-pressed="true">
+          Academic
+        </button>
+        <button type="button" data-audience="industrial" aria-pressed="false">
+          Industrial
+        </button>
+      </div>
+    </div>
+
     <div class="packages">
       {
         PACKAGES.map((tier) => (
           <Card class="package">
             <H level="3">{tier.name}</H>
             <p class="blurb">{tier.blurb}</p>
-            <p class="price">{tier.price}</p>
-            <LinkButton class="cta" href="/contact">
-              Request an offer
-            </LinkButton>
+            {(() => {
+              const top = tier.steps?.at(-1);
+              const academic = tier.academic ?? top?.academic;
+              const limit = tier.limit ?? top?.slides ?? null;
+              return (
+                <Fragment>
+                  <p class="price">
+                    {academic ? (
+                      <Fragment>
+                        <span
+                          class="amount"
+                          data-academic={amount(academic)}
+                          data-industrial={amount(academic * INDUSTRIAL_RATE)}
+                        >
+                          {amount(academic)}
+                        </span>{" "}
+                        &euro;
+                      </Fragment>
+                    ) : (
+                      "Custom"
+                    )}
+                  </p>
+                  <LinkButton class="cta" href="/contact">
+                    Contact us to order
+                  </LinkButton>
 
-            <p class="includes">Includes:</p>
-            <p class="slides" set:html={tier.slides} />
+                  <p class="includes">Includes:</p>
+                  <p class="slides">
+                    {tier.steps ? (
+                      <Fragment>
+                        up to{" "}
+                        <label class="volume">
+                          <span class="visually-hidden">Slides included</span>
+                          <select>
+                            {tier.steps.map((step) => (
+                              <option
+                                value={step.slides}
+                                selected={step.slides === top?.slides}
+                                data-academic={amount(step.academic)}
+                                data-industrial={amount(
+                                  step.academic * INDUSTRIAL_RATE,
+                                )}
+                              >
+                                {amount(step.slides)} slides
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                      </Fragment>
+                    ) : limit === null ? (
+                      <strong>No slide limits</strong>
+                    ) : (
+                      <Fragment>
+                        up to <strong>{amount(limit)}</strong> slides
+                      </Fragment>
+                    )}
+                  </p>
+                </Fragment>
+              );
+            })()}
             <ul>
               {tier.includes.map((item) => (
                 <li>
-                  <svg width="1em" height="1em" viewBox="0 0 16 16" aria-hidden>
+                  <svg
+                    width="1.5em"
+                    height="1.5em"
+                    viewBox="0 0 16 16"
+                    aria-hidden
+                  >
                     <path d="M2.5 8.5L6 12L13.5 4" />
                   </svg>
                   {item}
@@ -213,6 +306,54 @@ const latest = PUBLICATIONS.slice(0, 2);
     </div>
   </CellsSection>
 </Layout>
+
+<script>
+  /**
+   * Both controls only ever restate a figure the page already carries: each
+   * price knows its own two rates, and each volume step knows what it costs. So
+   * the page renders correct at the academic rate and the largest volume with no
+   * script at all, and this only swaps which of the figures already present is
+   * the one on show. The slide count needs no swapping of its own, since the
+   * select showing it is what the reader changed.
+   */
+  const group = document.querySelector<HTMLElement>(".audience");
+  const volume = document.querySelector<HTMLSelectElement>(".volume select");
+
+  if (group) {
+    const buttons = [...group.querySelectorAll("button")];
+    const volumeCard = volume?.closest(".package") ?? null;
+    let audience = "academic";
+
+    const paint = () => {
+      for (const el of document.querySelectorAll<HTMLElement>(
+        ".price .amount",
+      )) {
+        // The volume card's rate lives on the chosen step, not on the figure.
+        const source =
+          volume && el.closest(".package") === volumeCard
+            ? volume.selectedOptions[0]
+            : el;
+        const next = source?.dataset[audience];
+        if (next) el.textContent = next;
+      }
+    };
+
+    for (const button of buttons) {
+      button.addEventListener("click", () => {
+        audience = button.dataset.audience ?? "academic";
+        for (const other of buttons) {
+          other.setAttribute(
+            "aria-pressed",
+            String(other.dataset.audience === audience),
+          );
+        }
+        paint();
+      });
+    }
+
+    volume?.addEventListener("change", paint);
+  }
+</script>
 
 <style>
   /* Section copy sits in a measured column rather than running the full width
@@ -276,6 +417,11 @@ const latest = PUBLICATIONS.slice(0, 2);
     justify-content: center;
   }
 
+  .packages-band {
+    row-gap: var(--element-padding);
+    margin-bottom: calc(-5rem - 2 * var(--element-padding));
+  }
+
   .packages {
     display: flex;
     flex-wrap: wrap;
@@ -293,16 +439,35 @@ const latest = PUBLICATIONS.slice(0, 2);
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 0.75em;
+    gap: 1em;
     flex: 20rem 1 0;
     max-width: 26rem;
-    padding: calc(1.5 * var(--element-padding));
+    padding: calc(var(--element-padding));
     background-color: var(--background);
 
     /* A package sits flat on the band behind it, at the radius the rest of the
        page's blocks use rather than the tighter one Card defaults to. */
     border-radius: var(--element-border-radius);
     box-shadow: none;
+  }
+
+  /* Three across or one down, never the two-then-one that wrapping would give:
+     the packages read as a scale, and a third card sitting alone under two
+     others no longer reads as the last step of one. This is the width the row
+     stops fitting at, so the column takes over exactly where wrapping began. */
+  @media screen and (width < 70em) {
+    .packages {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* The basis above is a column width; down here the same value would be a
+       height, holding every card open to 20rem whether or not it has the
+       content to fill it. */
+    .package.package {
+      flex: 0 0 auto;
+      width: 100%;
+    }
   }
 
   .package :global(h3) {
@@ -319,9 +484,74 @@ const latest = PUBLICATIONS.slice(0, 2);
     justify-content: center;
   }
 
+  /* CellsSection lays its children on the page grid, which stretches them to the
+     content column, so the switch sits in a block of its own that centers it
+     over the cards it governs. */
+  .audience-row {
+    display: flex;
+    justify-content: center;
+    z-index: 1;
+  }
+
+  /* One control rather than two buttons: the group is the pill, and the side in
+     force is a second pill sitting inside it. */
+  .audience {
+    display: inline-flex;
+    padding: 0.25rem;
+    border-radius: var(--button-border-radius);
+    background-color: var(--accent-1);
+  }
+  .audience button {
+    padding: 0.5em 1.25em;
+    border: 0;
+    border-radius: var(--button-border-radius);
+    background-color: transparent;
+    color: var(--background);
+    font: inherit;
+    font-size: var(--text-size-label);
+    cursor: pointer;
+  }
+  .audience button[aria-pressed="true"] {
+    background-color: var(--background);
+    color: var(--text-color-heading);
+    font-weight: 700;
+  }
+
+  /* Volume is the one thing a Core package is chosen on, so it sits with the
+     action rather than down among the things every package includes. */
+  /* The control reads as the number in the sentence rather than as a field
+     under it, so it sits on the text baseline and is only as wide as the count
+     it shows. */
+  .volume {
+    display: inline-block;
+  }
+  .volume select {
+    padding: 0.45em 0.75em;
+    border: 0;
+    border-radius: var(--small-border-radius);
+    background-color: var(--cells-dark-pink);
+    color: var(--text-color-heading);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* Only one package is bought by volume, and the other two hold its row open so
+     that what every package includes still starts on one line across the three. */
+  /* Only one card carries a control on this line, and it is taller than the
+     plain text the other two set there, so the line is held to one height and
+     what every package includes still starts on the same row across the three. */
+  .slides {
+    display: flex;
+    align-items: center;
+    gap: 0.35em;
+    min-block-size: 2.5rem;
+  }
+
   /* What a package holds is the part a reader compares across cards, so the
      lists start together rather than each one following its own blurb. */
   .includes {
+    font-style: italic;
     padding-block-start: var(--element-padding);
   }
 
@@ -333,11 +563,12 @@ const latest = PUBLICATIONS.slice(0, 2);
   li {
     display: grid;
     grid-template-columns: 1.25em auto;
-    gap: 0.5em;
-    margin-block-end: 0.25em;
+    gap: 1em;
+  }
+  li + li {
+    margin-block-start: 1em;
   }
   li svg {
-    margin-block-start: 0.35em;
     fill: none;
     stroke: var(--text-color-heading);
     stroke-width: 2;
