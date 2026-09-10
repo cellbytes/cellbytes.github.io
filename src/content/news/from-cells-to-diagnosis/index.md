@@ -14,7 +14,7 @@ Cytomorphological analysis of bone marrow aspirate (BMA) and peripheral blood sm
 
 In recently published study in npj Digital Medicine, an interpretable multimodal multi-instance framework extends computational cytomorphology from cell-level recognition to patient-level disease classification. Using patient-level diagnoses alone, the model integrates BMA and PBS morphology through a clinically motivated hierarchy from malignant status to lineage and specific disease entity.
 
-The study included 45,248 May-Grünwald-Giemsa-stained smears acquired at 100x magnification and collected at the Helsinki University Hospital between 2009 and 2023, comprising 28,096 BMA and 17,152 PBS samples. The cohort encompassed major myeloid, lymphoid, and plasma-cell malignancies, as well as non-malignant conditions across multiple disease phases. Approximately 186 million nucleated cells were detected and encoded into morphological representations using the Cellbytes software. 
+The study included 45,248 May-Grünwald-Giemsa-stained smears acquired at 100x magnification and collected at the Helsinki University Hospital between 2009 and 2023, comprising 28,096 BMA and 17,152 PBS samples. The cohort encompassed major myeloid, lymphoid, and plasma-cell malignancies, as well as non-malignant conditions across multiple disease phases. Approximately 186 million nucleated cells were detected and encoded into morphological representations using the Cellbytes software.
 
 ![Process chart of the research, from cell detection and feature extraction to hematologic disease classification.](./npj_Wang_figure1a.png "Adapted from Wang et al (npj Digital Medicine, 2026)")
 
@@ -22,10 +22,8 @@ Across eight diagnostic categories, the model achieved AUROC values above 0.90 a
 
 Importantly, BMA and PBS provided complementary diagnostic information. BMA remained the dominant modality for marrow-centered diseases, while PBS added discriminatory value in lymphoma, MDS, and MPN, supporting the benefit of joint interpretation across both specimen types.
 
-Interpretability analyses showed that model predictions aligned with disease-relevant morphological evidence. Attention concentrated on hallmark cell populations, including blasts in acute leukemia and plasma cells in multiple myeloma, while model confidence decreased progressively as disease-defining cells were removed. 
+Interpretability analyses showed that model predictions aligned with disease-relevant morphological evidence. Attention concentrated on hallmark cell populations, including blasts in acute leukemia and plasma cells in multiple myeloma, while model confidence decreased progressively as disease-defining cells were removed.
 
 Overall, these findings highlight the potential of combining BMA and PBS morphology with machine learning to support patient-level cytomorphological diagnosis. Further multi-centre validation will be important to establish robustness across clinical settings and imaging platforms before broader clinical translation.
-
-Interested to utilize Cellbytes on your own research project? Contact our team at <contact@cellbytes.io>. 
 
 Wang, J., Tatun, M., Purhonen, M. et al. Interpretable multi-modal hierarchical framework to support cytomorphological analysis of hematologic cancers. npj Digit. Med. (2026). <https://doi.org/10.1038/s41746-026-03145-9>

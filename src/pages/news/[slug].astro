@@ -1,6 +1,7 @@
 ---
 import Layout from "~src/layouts/Layout.astro";
 import LinkButton from "~src/components/LinkButton.astro";
+import CallToAction from "~src/components/CallToAction.astro";
 import { getCollection, render } from "astro:content";
 import { Image } from "astro:assets";
 import { WIDTHS } from "~src/consts";
@@ -111,11 +112,16 @@ function formatDate(date: Date) {
 
     <Content />
   </article>
+
+  <CallToAction
+    title="Ready to digitize your hematology laboratory?"
+    topic="news"
+  />
 </Layout>
 
 <style is:global>
   article,
-  section {
+  section:not(.call-to-action) {
     display: flex;
     flex-direction: column;
     gap: 1em;
@@ -124,8 +130,6 @@ function formatDate(date: Date) {
 
     color: var(--text-color-body);
     font-size: var(--text-size-body);
-
-    margin-block-end: calc(2 * var(--element-padding));
   }
 
   article * + h2,

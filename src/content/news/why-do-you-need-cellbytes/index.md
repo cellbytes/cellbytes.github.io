@@ -32,8 +32,6 @@ Beyond routine diagnostics, Cellbytes is a powerful engine for academic research
 
 Ready to transform your laboratory's workflow? We offer a **free-of-charge trial period** with absolutely no commitment.
 
-Contact our team today at <contact@cellbytes.io> to schedule a demo.
-
 [^1]: Font, P. et al. Interobserver variance in myelodysplastic syndromes with less than 5% bone marrow blasts: unilineage vs. multilineage dysplasia and reproducibility of the threshold of 2% blasts. Annals of hematology 94, 565-573 (2015).
 
 [^2]: Accelerate Hematological Analysis with AI-Powered Digital Pathology | Evident. <https://evidentscientific.com/en/applications/accelerate-hematological-analysis-ai-powered-digital-pathology>.

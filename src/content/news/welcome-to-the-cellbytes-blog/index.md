@@ -25,7 +25,7 @@ We have lots of interesting stuff brewing up. in the coming months, you can expe
 - **Technology insights**; how we approach problems in computer vision and AI for hematopathology
 - **Company news**; partnerships, milestones, and the people behind Cellbytes
 
-We believe in building in the open, and this news is part of that commitment. If you have questions, feedback, or just want to talk digital hematopathology, we'd love to hear from you at [hello@cellbytes.io](mailto:hello@cellbytes.io)! While you're here, be sure to check out what's currently possible with Cellbytes on the [application](/application) page.
+We believe in building in the open, and this news is part of that commitment. If you have questions, feedback, or just want to talk digital hematopathology, we'd love to hear from you! While you're here, be sure to check out what's currently possible with Cellbytes on the [application](/application) page.
 
 ---
 

@@ -36,8 +36,6 @@ Together, these findings show that computational BM cytopathology can move beyon
 
 These two studies are one example of what the Cellbytes platform can support in research settings.
 
-If you have a research question where cell morphology could add another layer of information, we'd be excited to explore it with you. Contact us at <contact@cellbytes.io>.
-
 [^1]: Luukkainen, K. et al. Deep cytomorphology identifies erythroid skewing and monocytic morphology to predict TKI sensitivity in CML patients. HemaSphere 10, e70319 (2026). <https://doi.org/10.1002/hem3.70319>
 
 [^2]: Purhonen, M. et al. Granulocyte abundance and maturation state at diagnosis predicts treatment-free remission in CML. Leukemia 39, 2968–2977 (2025). <https://doi.org/10.1038/s41375-025-02769-2>

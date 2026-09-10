@@ -27,5 +27,3 @@ Within the Cellbytes platform, digitized slides undergo comprehensive AI-based e
 ## Supporting Research and Clinical Applications
 
 The combination of high-quality digital slide acquisition and AI-powered image analysis enables researchers to investigate cytomorphology at scale. Applications include biomarker discovery, quantitative cell profiling, oncology research, and large cohort studies where consistent, high-resolution imaging and automated analysis are essential for generating reproducible results.
-
-Ready to digitize your hematology laboratory? Contact us at <contact@cellbytes.io> to explore how Cellbytes can enhance your daily workflow.
