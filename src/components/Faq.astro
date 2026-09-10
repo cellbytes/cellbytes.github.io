@@ -4,6 +4,7 @@ import BytesCorner from "~src/assets/backgrounds/bytes/in-element-corner.svg";
 import H from "~src/components/HeadingLink.astro";
 import Card from "~src/components/Card.astro";
 import BytesSection from "~src/components/BytesSection.astro";
+import { contactHref } from "~src/utils/contactTopics";
 ---
 
 <BytesSection color="purple">
@@ -26,7 +27,8 @@ import BytesSection from "~src/components/BytesSection.astro";
       <p>
         Yes, Cellbytes offers a trial version for institutions and professionals
         interested in evaluating its capabilities. You can request trial access
-        by <a href="/contact">contacting the support team</a> through the website.
+        by <a href={contactHref("trial")}>contacting the support team</a> through
+        the website.
       </p>
     </Card>
     <Card class="card-item faq">

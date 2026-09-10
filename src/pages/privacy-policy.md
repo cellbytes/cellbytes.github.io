@@ -21,7 +21,7 @@ At Cellbytes Ltd. (“Cellbytes”, “we”), your privacy is of utmost importa
 Cellbytes Ltd.  
 **Business ID**: 3259091-4  
 **Address**: Biomedicum Helsinki 2C, Tukholmankatu 8, 00290 Helsinki Finland  
-**Representative**: For further information on data privacy issues, please contact <https://cellbytes.io/contact>
+**Representative**: For further information on data privacy issues, please contact <https://cellbytes.io/contact?topic=privacy>
 
 ## Why do we collect data?
 
@@ -78,4 +78,4 @@ We are committed to giving you control over your personal information. Your data
 - **Withdraw consent or object**: Withdraw consent at any time or object to data processing for specific purposes such as direct marketing or any other purposes.
 - **Lodge a complaint**: File a complaint with a supervisory authority if you believe your data rights are violated.
 
-To exercise these rights or for further assistance, please contact us through the Contact form <https://cellbytes.io/contact>. You can stop receiving future communications from us by clicking the unsubscribe link at the bottom of any email.
+To exercise these rights or for further assistance, please contact us through the Contact form <https://cellbytes.io/contact?topic=privacy>. You can stop receiving future communications from us by clicking the unsubscribe link at the bottom of any email.

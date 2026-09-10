@@ -13,6 +13,7 @@ import Section from "~src/components/Section.astro";
 import H from "~src/components/HeadingLink.astro";
 import Layout from "~src/layouts/Layout.astro";
 import type { PageMeta } from "~src/utils/opengraph";
+import { contactHref } from "~src/utils/contactTopics";
 import Card from "~src/components/Card.astro";
 import CellsSection from "~src/components/CellsSection.astro";
 import ContentBlock from "~src/components/ContentBlock.astro";
@@ -132,7 +133,8 @@ const ADJUSTABLE = [
     <p class="lead">
       Need integration to your LIS, PACS, or EHR? Cellbytes makes it simple to
       share results with your patient registry. Analyzing a slide is just one
-      click away. <a href="/contact">Contact us</a> for more information.
+      click away. <a href={contactHref("clinical-integration")}>Contact us</a> for
+      more information.
     </p>
   </DecoratedCard>
 
@@ -194,7 +196,7 @@ const ADJUSTABLE = [
         Exact price depends on usage volume and additional services.
       </p>
       <p class="price">3&ndash;15 &euro;<span class="unit">/slide</span></p>
-      <LinkButton class="cta" href="/contact"
+      <LinkButton class="cta" href={contactHref("clinical-offer")}
         >Contact us for an offer</LinkButton
       >
 

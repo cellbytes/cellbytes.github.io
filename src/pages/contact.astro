@@ -66,8 +66,18 @@ export const meta = {
 </Layout>
 
 <script>
+  import { contactMessage } from "~src/utils/contactTopics";
+
   const urlSearchParams = new URLSearchParams(window.location.search);
   const params = Object.fromEntries(urlSearchParams.entries());
+
+  // Filled here rather than server-side because the page is static: one
+  // /contact is built and served to every visitor, whatever topic sent them.
+  const message = contactMessage(urlSearchParams);
+  if (message) {
+    document.querySelector<HTMLTextAreaElement>("#message")!.value = message;
+  }
+
   if ("success" in params) {
     document.querySelector("title")!.innerHTML =
       "Thank you for contacting us! | Cellbytes";

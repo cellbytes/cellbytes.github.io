@@ -22,6 +22,7 @@ import DecoratedCard from "~src/components/DecoratedCard.astro";
 import CellsSection from "~src/components/CellsSection.astro";
 import CellsEdgeSection from "~src/components/CellsEdgeSection.astro";
 import CallToAction from "~src/components/CallToAction.astro";
+import { contactHref } from "~src/utils/contactTopics";
 import H from "~src/components/HeadingLink.astro";
 import LinkButton from "~src/components/LinkButton.astro";
 import ApplicationFrame from "~src/components/ApplicationFrame.astro";
@@ -210,8 +211,10 @@ const poster = await getImage({
       <p>
         Our digital hematology platform also natively supports most major
         microscopes and scanners with output images in DZI, SVS, VSI, CZI, MRXS,
-        DICOM, and OME-TIFF formats. <a href="/contact">Contact our team</a> today
-        to verify compatibility with your institution’s specific imaging system.
+        DICOM, and OME-TIFF formats. <a href={contactHref("scanner")}>
+          Contact our team
+        </a> today to verify compatibility with your institution’s specific imaging
+        system.
       </p>
     </ContentBlock>
   </Pair>
@@ -336,7 +339,10 @@ const poster = await getImage({
     </ul>
   </DecoratedCard>
 
-  <CallToAction title="Ready to digitize your cell morphology analysis?" />
+  <CallToAction
+    title="Ready to digitize your cell morphology analysis?"
+    topic="morphology"
+  />
 </Layout>
 
 <script>

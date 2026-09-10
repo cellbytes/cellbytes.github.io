@@ -2,12 +2,15 @@
 import Section from "~src/components/Section.astro";
 import LinkButton from "~src/components/LinkButton.astro";
 import H from "~src/components/HeadingLink.astro";
+import { contactHref, type ContactTopic } from "~src/utils/contactTopics";
 
 interface Props {
   title: string;
+  /** Which draft message the contact form opens with. */
+  topic: ContactTopic;
   demo?: boolean;
 }
-const { title, demo } = Astro.props;
+const { title, topic, demo } = Astro.props;
 ---
 
 <Section class="call-to-action">
@@ -23,7 +26,10 @@ const { title, demo } = Astro.props;
         </LinkButton>
       )
     }
-    <LinkButton href="/contact" variant={demo ? "default" : "highlight"}>
+    <LinkButton
+      href={contactHref(topic)}
+      variant={demo ? "default" : "highlight"}
+    >
       Contact us
     </LinkButton>
   </div>

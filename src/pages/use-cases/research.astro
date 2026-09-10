@@ -20,6 +20,7 @@ import LinkButton from "~src/components/LinkButton.astro";
 import Pair from "~src/components/Pair.astro";
 import PublicationCard from "~src/components/PublicationCard.astro";
 import { PUBLICATIONS } from "~src/utils/publications";
+import { contactHref, type ContactTopic } from "~src/utils/contactTopics";
 
 export const meta = {
   title: "Research | Cellbytes",
@@ -30,6 +31,12 @@ export const meta = {
 
 /** What an industrial licence costs against the academic rate for the same work. */
 const INDUSTRIAL_RATE = 1.5;
+
+/**
+ * The rate the cards show until the reader picks the other one, which the
+ * audience buttons below say again as the one they start pressed.
+ */
+const DEFAULT_AUDIENCE = "academic";
 
 /** Thousands are spaced rather than grouped with a comma, as the design sets them. */
 const amount = (euros: number) =>
@@ -54,13 +61,23 @@ const CORE_STEPS = [
  * academic rate and null where the package is quoted rather than priced;
  * `limit` is the slide ceiling, null where there is none.
  */
-const PACKAGES = [
+const PACKAGES: {
+  name: string;
+  blurb: string;
+  academic: number | null;
+  limit: number | null;
+  steps: { slides: number; academic: number }[] | null;
+  includes: string[];
+  /** The draft message the order button opens the contact form with. */
+  topic: ContactTopic;
+}[] = [
   {
     name: "Light",
     blurb: "Simple and concise analysis of a small batch of samples.",
     academic: 5000,
     limit: 100,
     steps: null,
+    topic: "research-light",
     includes: [
       "1 Tb image storage for 1 year",
       "Sample and image analysis viewing",
@@ -73,6 +90,7 @@ const PACKAGES = [
     academic: null,
     limit: null,
     steps: CORE_STEPS,
+    topic: "research-core",
     includes: [
       "10 Tb image storage for 1 year",
       "Sample and image analysis viewing",
@@ -86,6 +104,7 @@ const PACKAGES = [
     academic: null,
     limit: null,
     steps: null,
+    topic: "research-advanced",
     includes: [
       "Image storage for 1 year",
       "Sample and image analysis viewing",
@@ -240,7 +259,13 @@ const latest = PUBLICATIONS.slice(0, 2);
                       "Custom"
                     )}
                   </p>
-                  <LinkButton class="cta" href="/contact">
+                  <LinkButton
+                    class="cta"
+                    href={contactHref(tier.topic, {
+                      audience: DEFAULT_AUDIENCE,
+                      ...(top ? { slides: top.slides } : {}),
+                    })}
+                  >
                     Contact us to order
                   </LinkButton>
 
@@ -299,7 +324,10 @@ const latest = PUBLICATIONS.slice(0, 2);
     </div>
 
     <div class="offer">
-      <LinkButton variant="default-arrow" href="/contact">
+      <LinkButton
+        variant="default-arrow"
+        href={contactHref("research-custom", { audience: DEFAULT_AUDIENCE })}
+      >
         Request a custom offer
       </LinkButton>
     </div>
@@ -314,6 +342,10 @@ const latest = PUBLICATIONS.slice(0, 2);
    * script at all, and this only swaps which of the figures already present is
    * the one on show. The slide count needs no swapping of its own, since the
    * select showing it is what the reader changed.
+   *
+   * Both choices also travel onward to the contact form, so the draft message
+   * there names the same package on the same terms as the card the reader was
+   * looking at.
    */
   const group = document.querySelector<HTMLElement>(".audience");
   const volume = document.querySelector<HTMLSelectElement>(".volume select");
@@ -337,6 +369,24 @@ const latest = PUBLICATIONS.slice(0, 2);
       }
     };
 
+    // Only the topic decides which draft the form opens on, so these rewrite
+    // the query the build already emitted rather than rebuilding the link.
+    const links = [
+      ...document.querySelectorAll<HTMLAnchorElement>('a[href^="/contact?"]'),
+    ];
+
+    const retarget = () => {
+      for (const link of links) {
+        const url = new URL(link.href);
+        url.searchParams.set("audience", audience);
+        // The volume belongs to the card the select sits in, and to no other.
+        if (volume && link.closest(".package") === volumeCard) {
+          url.searchParams.set("slides", volume.value);
+        }
+        link.href = `${url.pathname}${url.search}`;
+      }
+    };
+
     for (const button of buttons) {
       button.addEventListener("click", () => {
         audience = button.dataset.audience ?? "academic";
@@ -347,10 +397,14 @@ const latest = PUBLICATIONS.slice(0, 2);
           );
         }
         paint();
+        retarget();
       });
     }
 
-    volume?.addEventListener("change", paint);
+    volume?.addEventListener("change", () => {
+      paint();
+      retarget();
+    });
   }
 </script>
 
