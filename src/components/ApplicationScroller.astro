@@ -10,8 +10,9 @@ import maskVisualization from "~src/assets/images/applicationScroller/07-mask-vi
 import cellDifferential from "~src/assets/images/applicationScroller/08-cell-differential.png";
 import fullDifferential from "~src/assets/images/applicationScroller/09-full-differential.png";
 import cellList from "~src/assets/images/applicationScroller/10-cell-list.png";
-import dysplasias from "~src/assets/images/applicationScroller/11-dysplasias.png";
-import report from "~src/assets/images/applicationScroller/12-report.png";
+import cellClusters from "~src/assets/images/applicationScroller/11-cell-clusters.png";
+import dysplasias from "~src/assets/images/applicationScroller/12-dysplasias.png";
+import report from "~src/assets/images/applicationScroller/13-report.png";
 
 import { WIDTHS as W } from "~src/consts";
 import Section from "~src/components/Section.astro";
@@ -31,7 +32,7 @@ const slides = [
     image: triage,
     cardTitle: "Intelligent triage",
     cardBody:
-      "Our system ranks bone marrow samples by clinical urgency. By scoring cytomorphological features automatically, we ensure high-priority cases receive immediate attention.",
+      "Our system ranks bone marrow and peripheral blood samples by clinical urgency. By scoring cytomorphological features automatically, we ensure high-priority cases receive immediate attention.",
     position: "right",
   },
   {
@@ -47,7 +48,7 @@ const slides = [
     image: tutorialCells,
     cardTitle: "Guided diagnostic workflow",
     cardBody:
-      "The evaluation flow will guide you through a sequence of analyses covering whole-sample analysis, selection of regions of interest, cell differential, dysplasia assessment and finally approving a standardized sample report.",
+      "The evaluation flow will guide you through a sequence of analyses covering whole-sample analysis, selection of regions of interest, cell differential, cell cluster detection, dysplasia assessment and finally approving a standardized sample report.",
     position: "left",
   },
   {
@@ -96,6 +97,14 @@ const slides = [
     cardTitle: "Interactive cell gallery",
     cardBody:
       "Review automated classifications with ease. Our organized cell-by-cell list allows users to validate the system’s performance and maintain full diagnostic control by updating labels on the fly. Cellbytes ensures rapid correction and validation using an intelligent cell similarity measure. These updated labels can also be used for model retraining, ensuring your system continuously adapts and performs best with your specific data.",
+    position: "right",
+  },
+  {
+    name: "cell-clusters",
+    image: cellClusters,
+    cardTitle: "Cell clusters",
+    cardBody:
+      "Focal patterns make residual disease easy to miss. Cellbytes highlights abnormal clusters of blasts, lymphocytes, and plasma cells to streamline MRD assessment for acute leukemia, improve lymphoma cell detection, and accurately measure plasma cell dyscrasias.",
     position: "right",
   },
   {
@@ -196,11 +205,12 @@ const animationCss = slides
   <div class="text">
     <H level="2">Comprehensive AI-powered analysis</H>
     <p>
-      Our AI aims to perform nearly all the same diagnostic tasks as healthcare
-      professionals, enhancing every step of the analysis process rather than
-      just optimizing isolated aspects. By combining cell classification with
-      morphology, dysplasia assessment, and sample quality analysis, we provide
-      a fresh angle for research.
+      Our automated algorithm suite aims to perform nearly all the same
+      diagnostic tasks as healthcare professionals, enhancing every step of the
+      analysis process rather than just optimizing isolated aspects. The rich
+      data covering cell classification, morphological features, cell clusters,
+      dysplasia assessment, and whole-slide descriptors are also available for
+      educational and research purposes.
     </p>
   </div>
   <ContentBlock class="scroller">

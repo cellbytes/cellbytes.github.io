@@ -32,9 +32,9 @@ test("screenshots crossfade in as the page scrolls", async ({ page }) => {
   await expect(image(page, "triage")).toHaveCSS("opacity", "0");
   await expect(image(page, "report")).toHaveCSS("opacity", "0");
 
-  // At 55% the sixth slide (49.5%-52.5%) is fully in and the seventh
-  // (58.8%-61.8%) has not started.
-  await scrollToProgress(page, 0.55);
+  // At 50% the sixth slide (45.3%-48.3%) is fully in and the seventh
+  // (53.7%-56.7%) has not started.
+  await scrollToProgress(page, 0.5);
   await expect(image(page, "mask-visualization")).toHaveCSS("opacity", "1");
   await expect(image(page, "cell-differential")).toHaveCSS("opacity", "0");
 
@@ -46,7 +46,7 @@ test.describe("desktop", { tag: "@desktop" }, () => {
   test.skip(({ isMobile }) => isMobile);
 
   test("cards stay visible while scrolling", async ({ page }) => {
-    await scrollToProgress(page, 0.55);
+    await scrollToProgress(page, 0.5);
     await expect(card(page, "scarcity-cellularity")).toHaveCSS("opacity", "1");
     await expect(card(page, "mask-visualization")).toHaveCSS("opacity", "1");
   });
@@ -56,9 +56,9 @@ test.describe("mobile", { tag: "@mobile" }, () => {
   test.skip(({ isMobile }) => !isMobile);
 
   test("passed cards fade out to make room for the next", async ({ page }) => {
-    // At 55% the fifth card (hidden from 48.2%) is gone and the sixth
-    // (hidden from 56.5%) is still showing.
-    await scrollToProgress(page, 0.55);
+    // At 50% the fifth card (hidden from 43.8%) is gone and the sixth
+    // (hidden from 52.3%) is still showing.
+    await scrollToProgress(page, 0.5);
     await expect(card(page, "scarcity-cellularity")).toHaveCSS("opacity", "0");
     await expect(card(page, "mask-visualization")).toHaveCSS("opacity", "1");
   });
@@ -80,7 +80,7 @@ test("the polyfill drives the scroller when native support is missing", async ({
   await page.reload();
   await polyfillRequest;
 
-  await scrollToProgress(page, 0.55);
+  await scrollToProgress(page, 0.5);
   await expect(image(page, "mask-visualization")).toHaveCSS("opacity", "1");
   await expect(image(page, "cell-differential")).toHaveCSS("opacity", "0");
 
@@ -89,7 +89,7 @@ test("the polyfill drives the scroller when native support is missing", async ({
 
   // The narrow layout adds the card fade-outs on the same timeline.
   await page.setViewportSize({ width: 390, height: 844 });
-  await scrollToProgress(page, 0.55);
+  await scrollToProgress(page, 0.5);
   await expect(card(page, "scarcity-cellularity")).toHaveCSS("opacity", "0");
   await expect(card(page, "mask-visualization")).toHaveCSS("opacity", "1");
 });
