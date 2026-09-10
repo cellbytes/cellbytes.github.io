@@ -1,0 +1,65 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import CellsEdge from "~src/assets/backgrounds/cells/cluster-large.svg";
+
+interface Props extends HTMLAttributes<"section"> {}
+const props = Astro.props;
+---
+
+<section {...props}>
+  <CellsEdge class="edge breathe" />
+  <slot />
+</section>
+
+<style>
+  /* The cells band, but gathered down one edge rather than at two opposite
+     corners. A block that pairs copy with a picture running off the far side
+     has only the near edge left to decorate: art in the opposite corner would
+     sit under the picture, where none of it can be seen. */
+  section {
+    position: relative;
+    grid-column: full;
+    padding-block: var(--block-padding);
+
+    display: grid;
+    grid-template-columns: subgrid;
+    row-gap: calc(4 * var(--element-padding));
+    overflow: hidden;
+    background-color: var(--background-2);
+
+    /* Cluster placement knobs, as in HeroSection; override these from the
+       caller. */
+    --content-max: var(--column-width);
+    --pad: var(--element-padding);
+    /* No gap, unlike the hero: the cells are meant to crowd right up to the
+       copy here and stop at it, so the column's own edge is the line they are
+       held to. */
+    --gap: -20px;
+    --edge: -100px;
+    --svg-w: 400px;
+  }
+
+  section > :global(*:not(svg)) {
+    grid-column: content;
+    z-index: 1;
+  }
+
+  /* A tall cluster rather than a corner one, run the height of the section so
+     the cells follow the whole edge instead of pooling at one end of it.
+     Placed the way HeroSection places its own: the artwork is pushed out until
+     its inner edge clears the content column by a gap, so however wide the
+     window is the cells stay in the margin and never sit under the copy. */
+  .edge {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: var(--svg-w);
+    left: min(
+      var(--edge),
+      calc(
+        50% - min(var(--content-max), 100% - 2 * var(--pad)) / 2 - var(--gap) -
+          var(--svg-w)
+      )
+    );
+  }
+</style>

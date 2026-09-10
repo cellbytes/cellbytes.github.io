@@ -2,7 +2,11 @@
 import { getImage, Image } from "astro:assets";
 import collaborating from "~src/assets/images/mockups/collaborating_erythroblasts.webp";
 import commenting from "~src/assets/images/mockups/comment-function.webp";
-import evidentMicroscope from "~src/assets/images/home/evident-vs200-logos-side.png";
+import laptop from "~src/assets/images/home/laptop-on-desk.png";
+import evidentVs200 from "~src/assets/images/home/evident-vs200.webp";
+import pramanaHt from "~src/assets/images/home/pramana-ht.webp";
+import evidentLogo from "~src/assets/images/home/evident-logo.jpg";
+import Logotype from "~src/assets/icons/logotype.svg";
 import microscope from "~src/assets/images/home/microscope.png";
 import bannerPoster from "~src/assets/images/home/banner-poster.jpeg";
 import BytesEdge from "~src/assets/backgrounds/bytes/in-element-edge.svg";
@@ -16,6 +20,7 @@ import Section from "~src/components/Section.astro";
 import Pair from "~src/components/Pair.astro";
 import DecoratedCard from "~src/components/DecoratedCard.astro";
 import CellsSection from "~src/components/CellsSection.astro";
+import CellsEdgeSection from "~src/components/CellsEdgeSection.astro";
 import CallToAction from "~src/components/CallToAction.astro";
 import H from "~src/components/HeadingLink.astro";
 import LinkButton from "~src/components/LinkButton.astro";
@@ -80,7 +85,7 @@ const poster = await getImage({
     <p class="ingress">
       Cellbytes is the new standard in hematopathology. By integrating the
       entire cytomorphological analysis for both bone marrow and peripheral
-      blood smears in one software, it's easier than ever to modernize your
+      blood smears in one software, it’s easier than ever to modernize your
       diagnostic workflows.
     </p>
   </Section>
@@ -96,16 +101,17 @@ const poster = await getImage({
       <ContentBlock>
         <H level="2">Objective and transparent</H>
         <p>
-          Cellbytes is designed to augment hematopathologists, not replace them.
-          Standardized, real-time digital assessment can enhance human
-          performance and decrease subjectivity. Trained on millions of cells
-          across diverse hematologic conditions, Cellbytes provides consistent,
-          high-quality outputs. Every model prediction comes with clear
-          visualizations and quantifiable data, ensuring transparency and
-          supporting users to review what the software has identified.
+          Cellbytes is a digital hematology system designed to augment
+          hematopathologists, not replace them. Standardized, real-time digital
+          assessment can enhance human performance and decrease subjectivity.
+          Trained on millions of cells across diverse hematologic conditions,
+          Cellbytes provides consistent, high-quality outputs. Every model
+          prediction comes with clear visualizations and quantifiable data,
+          ensuring transparency and supporting users to review what the software
+          has identified.
         </p>
         <LinkButton href="/application" variant="default-arrow">
-          Application
+          Application details
         </LinkButton>
       </ContentBlock>
     </Pair>
@@ -120,8 +126,9 @@ const poster = await getImage({
       <ContentBlock>
         <H level="2">Real-time analysis</H>
         <p>
-          Cellbytes is designed for high throughput analysis serving both small
-          and large laboratories ensuring diagnostics will keep pace with your
+          Cellbytes is an automated digital morphology analyzer designed for
+          high-throughput, parallelized batch analysis serving both small and
+          large laboratories ensuring diagnostics will keep pace with your
           clinical need. The secure cloud-based computing is available wherever
           you are and 24/7. You can also retrieve historical slides in seconds
           to effortlessly track patient progression over time.
@@ -130,55 +137,84 @@ const poster = await getImage({
           href="/application#comprehensive-ai-powered-analysis"
           variant="default-arrow"
         >
-          Algorithms
+          Analysis/evaluation workflow
         </LinkButton>
       </ContentBlock>
     </Pair>
   </CellsSection>
 
   <Pair tag="section">
-    <a
-      href="https://evidentscientific.com/en/products/slide-scanners/vs200"
-      class="imagelink"
-    >
-      <Image
-        src={evidentMicroscope}
-        alt="Evident's digital microscope, the SLIDEVIEW VS200, shown on top of the Evident and Cellbytes logos."
-        widths={WIDTHS}
-        height="400"
-        style={{ objectFit: "contain", height: "400px" }}
-      />
-    </a>
+    <div class="scanners">
+      <figure>
+        <Image
+          src={evidentVs200}
+          alt="Evident's SLIDEVIEW VS200 slide scanner."
+          widths={[300, 600]}
+          height="300"
+        />
+        <figcaption>
+          <a
+            href="https://evidentscientific.com/en/products/slide-scanners/vs200"
+          >
+            Evident SLIDEVIEW VS200
+          </a>
+        </figcaption>
+      </figure>
+
+      <figure>
+        <Image
+          src={pramanaHt}
+          alt="A Pramana HT Series scanner with its robotic slide loader."
+          widths={[300, 600]}
+          height="300"
+        />
+        <figcaption>
+          <a
+            href="https://evidentscientific.com/en/products/slide-scanners/pramana-ht"
+          >
+            Pramana HT Series
+          </a>
+        </figcaption>
+      </figure>
+
+      <a href="/news/cellbytes-and-evident-case-study" class="lockup">
+        <Image
+          src={evidentLogo}
+          alt="Evident"
+          widths={[240, 480]}
+          height="60"
+        />
+        <span aria-hidden="true">&times;</span>
+        <Logotype />
+        <span class="visually-hidden">
+          Cellbytes and Evident: read the case study
+        </span>
+      </a>
+    </div>
     <ContentBlock>
-      <H level="2">Precision software optimized with industry-leading imaging</H
-      >
+      <H level="2">
+        Precision software optimized with industry-leading imaging
+      </H>
       <p>
-        Out of all the supported scanners, the Evident SLIDEVIEW VS200 and
-        Pramana HT Series are perfect matches for Cellbytes. Partnering with
-        industry leading image quality and automated imaging enables you to
-        focus on what matters most.
+        Out of all the supported scanners, the <a
+          href="https://evidentscientific.com/en/products/slide-scanners/vs200"
+        >
+          Evident SLIDEVIEW VS200
+        </a> and <a
+          href="https://evidentscientific.com/en/products/slide-scanners/pramana-ht"
+        >
+          Pramana HT Series
+        </a> are perfect matches for Cellbytes. Partnering with industry leading image
+        quality and automated imaging enables you to focus on what matters most.
       </p>
       <p>
-        Our platform natively supports most major scanners with output images in
-        DZI, SVS, VSI, CZI, MRXS, DICOM, and OME-TIFF formats. Contact our team
-        today to verify compatibility with your institution's specific imaging
-        system.
+        Our digital hematology platform also natively supports most major
+        microscopes and scanners with output images in DZI, SVS, VSI, CZI, MRXS,
+        DICOM, and OME-TIFF formats. <a href="/contact">Contact our team</a> today
+        to verify compatibility with your institution's specific imaging system.
       </p>
     </ContentBlock>
   </Pair>
-
-  <DecoratedCard variant="bytes" tag="section">
-    <H level="2">Full AI-assisted morphology analysis</H>
-    <p class="ingress">
-      Hematopathology is not just about counting cells. <a
-        href="/application#cellbytes-features"
-      >
-        Cellbytes performs end-to-end cytomorphological assessment
-      </a> covering cellularity, sample adequacy, megakaryocyte counts, cell classification,
-      and dysplasia detection. Results are summarized in a standardized report that
-      can be seamlessly integrated into your laboratory information system.
-    </p>
-  </DecoratedCard>
 
   <BytesSection class="tall">
     <BytesEdge class="art-bytes-in-element-edge bytes-edge" />
@@ -193,13 +229,20 @@ const poster = await getImage({
     <ContentBlock class="tall-text">
       <H level="2">Flexible workflow integration</H>
       <p>
-        Whole-slide and single-cell image analysis is compatible with diverse
-        microscopes and imaging systems. Cellbytes is simple to deploy and
-        scales effortlessly to labs of any size. No need for additional hardware
-        or complex installations &ndash; only your computer.
+        We built Cellbytes for healthcare professionals, the pharmaceutical
+        industry, and academic researchers who need clearer insights from visual
+        data. It combines the accuracy required for routine diagnostics, the
+        versatility of consultation and collaboration, as well as the
+        flexibility needed to discover new biological insights. Especially
+        clinical workflow may not always be the most robust, but with our remote
+        hematology review software, collaboration both within and out of your
+        facility becomes easier.
       </p>
-      <LinkButton href="/application#scan-slides" variant="default-arrow">
-        Collaborative workflow
+      <LinkButton
+        href="/use-cases/clinical#collaboration"
+        variant="default-arrow"
+      >
+        Clinical workflow
       </LinkButton>
     </ContentBlock>
     <ContentBlock class="tall-text">
@@ -215,11 +258,62 @@ const poster = await getImage({
     </ContentBlock>
   </BytesSection>
 
+  <DecoratedCard variant="bytes" tag="section">
+    <H level="2">Full AI-assisted morphology analysis</H>
+    <p class="ingress">
+      Hematopathology is not just about counting cells. <a
+        href="/application#cellbytes-features"
+      >
+        Cellbytes performs end-to-end cytomorphological assessment
+      </a> covering cellularity, sample adequacy, megakaryocyte counts, cell classification,
+      and dysplasia detection. Results are summarized in a standardized report that
+      can be seamlessly integrated into your laboratory information system.
+    </p>
+  </DecoratedCard>
+
+  <CellsEdgeSection class="use-cases">
+    <div class="use-cases-photo">
+      <Image
+        src={laptop}
+        alt="A laptop on a desk showing a cell gallery in Cellbytes."
+        widths={WIDTHS}
+        height="800"
+      />
+    </div>
+
+    <ContentBlock class="use-cases-text">
+      <H level="2">From cell images to clinical decisions</H>
+      <p>
+        An automatic cell differential is one thing. But a software to support
+        every step of cytomorphological assessment is another. Cellbytes is
+        there to elevate your diagnostic work and create new opportunities from
+        remote work, consultation and even collaboration across clinical
+        laboratories.
+      </p>
+      <LinkButton href="/use-cases/clinical" variant="default-arrow">
+        Clinical use-cases
+      </LinkButton>
+    </ContentBlock>
+
+    <ContentBlock class="use-cases-text">
+      <H level="2">Quantitative morphometry</H>
+      <p>
+        Cellbytes was created by researchers for researchers. Analyzing cell
+        morphology requires strong domain knowledge spanning both hematology and
+        hematopathology. Cellbytes democratizes this process by providing
+        researchers and the pharmaceutical teams with a certified platform to
+        turn high-dimensional single-cell morphology into disease biomarkers and
+        accelerate drug discovery.
+      </p>
+      <LinkButton href="/use-cases/research" variant="default-arrow">
+        Research use-cases
+      </LinkButton>
+    </ContentBlock>
+  </CellsEdgeSection>
+
   <NewsHighlights />
 
   <Faq />
-
-  <CallToAction title="Ready to digitize your hematology laboratory?" />
 
   <DecoratedCard variant="cells-bytes" tag="section" class="partnerships">
     <H level="2">In research partnership with</H>
@@ -241,6 +335,8 @@ const poster = await getImage({
       </li>
     </ul>
   </DecoratedCard>
+
+  <CallToAction title="Ready to digitize your cell morphology analysis?" />
 </Layout>
 
 <script>
@@ -266,6 +362,43 @@ const poster = await getImage({
 </script>
 
 <style>
+  /* Both use cases point at one photo rather than each carrying its own, so it
+     spans their two rows and is cropped to whatever height they come to,
+     reaching from the middle of the page out past the edge of the window. */
+  .use-cases {
+    align-items: center;
+    column-gap: calc(2 * var(--element-padding));
+    row-gap: calc(2 * var(--element-padding));
+  }
+  .use-cases-text {
+    grid-column: content-start / content-mid;
+  }
+  .use-cases-photo {
+    grid-column: content-mid / full-end;
+    grid-row: 1 / span 2;
+    align-self: stretch;
+  }
+  .use-cases-photo :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--element-border-radius) 0 0 var(--element-border-radius);
+  }
+
+  @media screen and (width < 50em) {
+    .use-cases-photo {
+      grid-column: full;
+      grid-row: auto;
+    }
+    .use-cases-photo :global(img) {
+      border-radius: 0;
+      max-height: 60vh;
+    }
+    .use-cases-text {
+      grid-column: content;
+    }
+  }
+
   .hero {
     --gap: -100px;
   }
@@ -293,9 +426,57 @@ const poster = await getImage({
     max-width: 60ch;
   }
 
-  .imagelink {
+  /* Two instruments over the mark that pairs the companies, which is what the
+     section is about: the scanners Cellbytes is tuned for, and the partnership
+     that tuned it. */
+  .scanners {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-block: auto;
+    gap: var(--element-padding);
+    align-items: center;
+  }
+  .scanners figure {
+    margin: 0;
     display: flex;
+    flex-direction: column;
+    gap: 0.75em;
+  }
+
+  /* The two are photographed at different scales and one is far taller than the
+     other, so they are given a shared box to sit in rather than a shared width,
+     which would leave them looking like instruments of very different sizes. */
+  .scanners figure :global(img) {
+    inline-size: 100%;
+    block-size: 14rem;
+    object-fit: contain;
+  }
+  figcaption {
+    color: var(--text-color-heading);
+    text-align: center;
+  }
+
+  .lockup {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
     justify-content: center;
+    gap: 0.75em;
+    color: var(--text-color-heading);
+    font-size: var(--text-size-heading-3);
+    text-decoration: none;
+  }
+  /* The wordmark is supplied with generous space above and below it, so its box
+     has to stand taller than the logotype beside it for the two marks to read
+     at the same size. */
+  .lockup :global(img) {
+    inline-size: auto;
+    block-size: 3.4rem;
+    object-fit: contain;
+  }
+  .lockup :global(svg) {
+    inline-size: auto;
+    block-size: 2.2rem;
   }
 
   .tall {
