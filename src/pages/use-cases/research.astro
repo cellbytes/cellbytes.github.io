@@ -346,6 +346,10 @@ const latest = PUBLICATIONS.slice(0, 2);
    * Both choices also travel onward to the contact form, so the draft message
    * there names the same package on the same terms as the card the reader was
    * looking at.
+   *
+   * Hence the pass on pageshow. A back-navigation restores the select, which
+   * the server could not have known about when it rendered the figure beside
+   * it, so the two disagree until something reconciles them.
    */
   const group = document.querySelector<HTMLElement>(".audience");
   const volume = document.querySelector<HTMLSelectElement>(".volume select");
@@ -386,6 +390,14 @@ const latest = PUBLICATIONS.slice(0, 2);
         link.href = `${url.pathname}${url.search}`;
       }
     };
+
+    // On pageshow rather than inline: the browser puts a restored value back
+    // after this module has run, so reading the select any earlier sees the
+    // step the server rendered rather than the one the reader left behind.
+    window.addEventListener("pageshow", () => {
+      paint();
+      retarget();
+    });
 
     for (const button of buttons) {
       button.addEventListener("click", () => {
