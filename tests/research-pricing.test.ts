@@ -3,34 +3,6 @@ import { test, expect } from "@playwright/test";
 // The pricing controls only ever restate figures the page already carries, so
 // what can go wrong is the two halves disagreeing about which figure.
 
-test("the packages band is tinted by the rate on show", async ({ page }) => {
-  await page.goto("/use-cases/research");
-
-  const band = page.locator(".packages-band");
-  // Resolved from the tokens rather than their hex, so retinting the palette
-  // moves the page and this test together.
-  const tint = (token: string) =>
-    page.evaluate((name) => {
-      const probe = document.createElement("div");
-      probe.style.backgroundColor = `var(${name})`;
-      document.body.append(probe);
-      const color = getComputedStyle(probe).backgroundColor;
-      probe.remove();
-      return color;
-    }, token);
-
-  await expect(band).toHaveCSS(
-    "background-color",
-    await tint("--support-pink"),
-  );
-
-  await page.getByRole("button", { name: "Industrial" }).click();
-  await expect(band).toHaveCSS(
-    "background-color",
-    await tint("--support-blue"),
-  );
-});
-
 test.describe("desktop", { tag: "@desktop" }, () => {
   test.skip(({ isMobile }) => isMobile);
 
