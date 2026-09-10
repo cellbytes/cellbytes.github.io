@@ -30,7 +30,7 @@ export const meta = {
 
 /** What every clinical license carries, and what is negotiated per site. */
 const CORE_PACKAGE = [
-  "Up to 100 users",
+  "Unlimited users",
   "Customer support",
   "Export tool for research",
   "1-year storage (max 10 Gb per file)",
@@ -117,10 +117,10 @@ const ADJUSTABLE = [
       <ContentBlock>
         <H level="3">External collaboration</H>
         <p>
-          To serve hospital networks, Cellbytes enables slides scanned across
-          multiple locations to be aggregated into a single, shared digital
-          pool. This flexible model helps institutions easily distribute the
-          workload during sudden sample surges or staffing shortages.
+          To serve hospital networks, slides can be scanned at multiple
+          locations and shared as a collective digital pool. This innovative
+          solution may minimize the load following sudden increases in sample
+          numbers and physicians being sick.
         </p>
       </ContentBlock>
       <ExternalDiagram class="art-diagram-external diagram" />
@@ -137,7 +137,7 @@ const ADJUSTABLE = [
   </DecoratedCard>
 
   <Section>
-    <H level="2">More control on AI</H>
+    <H level="2">More control on algorithm performance</H>
     <p class="lead">
       No AI is perfect, which is why routine validation and reclassification
       remain essential. Cellbytes can be calibrated with your lab&apos;s own
@@ -220,6 +220,9 @@ const ADJUSTABLE = [
 
   /* The two halves alternate sides, so each diagram reads as belonging to the
      copy it sits next to rather than to the section as a whole. */
+  .collaboration :global(h2) {
+    text-align: center;
+  }
   .collaboration :global(.pair) {
     align-items: center;
   }
