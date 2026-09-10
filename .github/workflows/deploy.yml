@@ -68,6 +68,13 @@ jobs:
   deploy:
     name: Deploy website
     needs: test
+    # Pages refuses a deployment while another is in flight, which fails a run
+    # whose build and tests both passed. Queue rather than cancel: every commit
+    # on main is a release, so the one already going out still has to land.
+    # Scoped to this job so concurrent pushes still build and test in parallel.
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     environment:
       name: Production
