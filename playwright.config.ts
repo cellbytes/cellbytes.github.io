@@ -8,7 +8,11 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : (undefined as any),
+  // The suite is mostly one browser context per routed page per project, which
+  // is long enough to run end to end to crowd the job's ten-minute limit. The
+  // runner has the cores for two at once; the pages are static, so nothing the
+  // tests do can collide.
+  workers: process.env.CI ? 2 : (undefined as any),
   reporter: "html",
   use: {
     baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL ?? "http://127.0.0.1:4321",
