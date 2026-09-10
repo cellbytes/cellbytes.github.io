@@ -10,7 +10,7 @@ _Last updated: 2.12.2024_
 
 ## General
 
-At Cellbytes Ltd. (”Cellbytes”, “we”), your privacy is of utmost importance to us. Therefore, we adhere to data minimization principles:
+At Cellbytes Ltd. (“Cellbytes”, “we”), your privacy is of utmost importance to us. Therefore, we adhere to data minimization principles:
 
 - We collect only the information necessary to provide our services and meet the purposes outlined in this policy.
 - Your data will not be used for any purposes beyond what is specified here.

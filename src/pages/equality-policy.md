@@ -16,7 +16,7 @@ Cellbytes Ltd. acknowledges that gender equality is a fundamental human right an
 
 ## Leadership and commitment
 
-Cellbytes Ltd.'s leadership is committed to providing visible and sustained support for gender equality. This includes actively promoting gender diversity at all levels of the organization, setting measurable gender equality targets, and monitoring progress towards achieving them.
+Cellbytes Ltd.’s leadership is committed to providing visible and sustained support for gender equality. This includes actively promoting gender diversity at all levels of the organization, setting measurable gender equality targets, and monitoring progress towards achieving them.
 
 ## Equal opportunities in recruitment and promotion
 

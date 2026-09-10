@@ -1,6 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import doctorLaptop from "~src/assets/images/contact/doctor-laptop.jpg";
+import papersCellsBytes from "~src/assets/images/contact/papers-cells-bytes.png";
 
 import { WIDTHS } from "~src/consts";
 import Layout from "~src/layouts/Layout.astro";
@@ -18,7 +18,7 @@ export const meta = {
   title: "Contact | Cellbytes",
   description:
     "Questions about Cellbytes for clinical diagnostics, research or a proof-of-concept? Our experts are ready to help.",
-  card: { title: "Contact us", image: doctorLaptop },
+  card: { title: "Contact us", image: papersCellsBytes },
 } satisfies PageMeta;
 ---
 
@@ -26,7 +26,7 @@ export const meta = {
   <HeroSection>
     <Pair>
       <Image
-        src={doctorLaptop}
+        src={papersCellsBytes}
         alt="A doctor typing on her laptop with a stethoscope hanging around her neck."
         widths={WIDTHS}
         height="300"
@@ -34,11 +34,11 @@ export const meta = {
       <ContentBlock>
         <h1>Contact us</h1>
         <p>
-          Do you have questions about our company or Cellbytes&apos;s image
-          analysis solutions? Whether you&apos;re considering Cellbytes for
-          clinical diagnostics, research, or a proof-of-concept &ndash;
-          we&apos;re ready to help. Fill out the form, and one of our experts
-          will reach out to you shortly.
+          Do you have questions about our company or Cellbytes’s image analysis
+          solutions? Whether you’re considering Cellbytes for clinical
+          diagnostics, research, or a proof-of-concept &ndash; we’re ready to
+          help. Fill out the form, and one of our experts will reach out to you
+          shortly.
         </p>
         <form action="https://api.staticforms.xyz/submit" method="post">
           <input
