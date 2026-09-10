@@ -219,7 +219,7 @@ const latest = PUBLICATIONS.slice(0, 2);
     </p>
   </Section>
 
-  <CellsSection class="packages-band">
+  <CellsSection class="packages-band" data-audience={DEFAULT_AUDIENCE}>
     <div class="audience-row">
       <div class="audience" role="group" aria-label="Show prices for">
         <button type="button" data-audience="academic" aria-pressed="true">
@@ -353,6 +353,7 @@ const latest = PUBLICATIONS.slice(0, 2);
    */
   const group = document.querySelector<HTMLElement>(".audience");
   const volume = document.querySelector<HTMLSelectElement>(".volume select");
+  const band = document.querySelector<HTMLElement>(".packages-band");
 
   if (group) {
     const buttons = [...group.querySelectorAll("button")];
@@ -408,6 +409,7 @@ const latest = PUBLICATIONS.slice(0, 2);
             String(other.dataset.audience === audience),
           );
         }
+        if (band) band.dataset.audience = audience;
         paint();
         retarget();
       });
@@ -482,9 +484,16 @@ const latest = PUBLICATIONS.slice(0, 2);
     justify-content: center;
   }
 
+  /* The band is tinted by the rate on show, so the switch reads as changing
+     the whole block of prices rather than only the figures on the cards. */
   .packages-band {
     row-gap: var(--element-padding);
     margin-bottom: calc(-5rem - 2 * var(--element-padding));
+    background-color: var(--support-pink);
+    transition: background-color 200ms ease-out;
+  }
+  .packages-band[data-audience="industrial"] {
+    background-color: var(--bytes-mid-blue);
   }
 
   .packages {
