@@ -7,6 +7,7 @@ import type { PageMeta } from "~src/utils/opengraph";
 import Section from "~src/components/Section.astro";
 import NewsCard from "~src/components/NewsCard.astro";
 import { getNewsPosts } from "~src/utils/news";
+import CallToAction from "~src/components/CallToAction.astro";
 
 const posts = await getNewsPosts();
 
@@ -24,8 +25,8 @@ export const meta = {
     <div class="text">
       <h1>News from Cellbytes</h1>
       <p>
-        Updates from the Cellbytes team on the Cellbytes application, digital
-        pathology and related research.
+        Updates from the Cellbytes team on the application, digital pathology
+        and related research.
       </p>
     </div>
     <BytesSmall class="art-bytes-cluster bytes blink" />
@@ -40,6 +41,8 @@ export const meta = {
       }
     </section>
   </Section>
+
+  <CallToAction title="Ready to digitize your hematology laboratory?" />
 </Layout>
 
 <style>
