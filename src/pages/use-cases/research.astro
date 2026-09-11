@@ -323,6 +323,15 @@ const latest = PUBLICATIONS.slice(0, 2);
       }
     </div>
 
+    <p>
+      Cellbytes is easy to use, but complex data analyses often benefit from
+      specialized domain expertise. With years of expertise in analyzing
+      morphometry data, we can offer services covering data preprocessing,
+      computational pipelines, and custom visualizations to ensure rapid,
+      publication-ready research data for your team. We are also open to develop
+      custom algorithms for your needs.
+    </p>
+
     <div class="offer">
       <LinkButton
         variant="default-arrow"
@@ -494,6 +503,11 @@ const latest = PUBLICATIONS.slice(0, 2);
   }
   .packages-band[data-audience="industrial"] {
     background-color: var(--bytes-mid-blue);
+  }
+
+  .packages-band > p {
+    max-width: 65ch;
+    margin-inline: auto;
   }
 
   .packages {
