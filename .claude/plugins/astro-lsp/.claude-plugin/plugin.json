@@ -1,0 +1,6 @@
+{
+  "name": "astro-lsp",
+  "description": "Serves Astro files from the repo that pins the Astro language server",
+  "version": "1.0.0",
+  "author": { "name": "Cellbytes" }
+}

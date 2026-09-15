@@ -23,6 +23,28 @@ at the origin visitors actually reach.
 - Tests: Playwright (`playwright.config.ts`, specs under `tests/`).
 - Video playback uses `hls.js`.
 
+## Language server for coding agents
+
+Coding agents get astro-ls diagnostics and navigation in-session, from a Claude
+Code plugin this repo carries under `.claude/`. It covers `.astro` and `.ts`
+alike, so the whole repo is served by the same checker `astro check` uses.
+
+There is no devcontainer here to register it on create, so opening this repo on
+its own means running these once by hand:
+
+```sh
+claude plugin marketplace add <repo root>/.claude
+claude plugin install astro-lsp@cellbytes-cellbytes.github.io
+```
+
+Inside the unified dev-env container the `app` repo's plugins are the ones
+loaded, and its `astro-lsp` finds this repo's server for `.astro` files; `.ts`
+there goes to tsgo instead, since an extension can only belong to one server.
+
+`.claude/lsp/astro-launcher.py` is a vendored copy owned by the `dev-env` repo -
+read its README for what the launcher does and why astro-ls needs one. Change it
+there and re-run that repo's `make sync-lsp-plugins`; do not edit the copy here.
+
 ## Common commands
 
 | Command                  | Purpose                                              |
