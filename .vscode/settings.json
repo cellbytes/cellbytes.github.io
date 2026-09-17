@@ -34,5 +34,24 @@
     "MD025": { "front_matter_title": "" },
     "MD033": { "allowed_elements": ["div"] }, // need table overflow wrappers
     "MD036": false
+  },
+
+  // scripts/generate_app_images.py is a PEP 723 script: `uv run --script` builds
+  // its environment from the inline `dependencies`, but ty does not, and a
+  // script is its own single-file project that inherits nothing from the repo.
+  // Without an environment every third-party import reads as unresolved, so the
+  // editor is pointed at the venv `scripts/setup-python.sh` fills from that same
+  // metadata.
+  //
+  // The path is absolute because a relative one is resolved against the script's
+  // own directory, not this folder, and because the language server is shared
+  // across the dev-env workspace and runs from whichever folder comes first.
+  // /workspace/cellbytes.github.io is where dev-env mounts this repo
+  // (projects.json); opened from anywhere else, ty reports the setting as
+  // invalid and this file needs the local path instead.
+  "ty.configuration": {
+    "environment": {
+      "python": "/workspace/cellbytes.github.io/.venv"
+    }
   }
 }

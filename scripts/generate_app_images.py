@@ -45,7 +45,7 @@ from pathlib import Path
 
 import numpy as np
 from PIL import Image, ImageDraw
-from playwright.sync_api import Locator, Page, expect, sync_playwright
+from playwright.sync_api import Locator, Page, ViewportSize, expect, sync_playwright
 
 URL = os.environ.get("DEV_URL", "http://localhost:3000")
 CREDS = {"email": "test@mail.com", "password": "Testpass123!"}
@@ -59,7 +59,7 @@ SCROLLER = Path("src/assets/images/applicationScroller")
 SAMPLE = 1
 SLIDE = 2
 
-DIMS = {"width": 1600, "height": 900}
+DIMS = ViewportSize(width=1600, height=900)
 
 # Viewport the whole-slide frames share: the scanned tissue, centred, filling
 # the viewer. Written as OpenSeadragon search params, which the viewer reads on
@@ -269,7 +269,13 @@ with sync_playwright() as playwright:
     )
     highlight(
         SCROLLER / "05-slide-viewer.png",
-        [cross(sidebar(page), tabs(page), page.get_by_role("table", name="Cell differential"))],
+        [
+            cross(
+                sidebar(page),
+                tabs(page),
+                page.get_by_role("table", name="Cell differential"),
+            )
+        ],
         SCROLLER / "08-cell-differential.png",
     )
 
@@ -299,7 +305,11 @@ with sync_playwright() as playwright:
     highlight(
         SCROLLER / "10-cell-list.png",
         [
-            cross(sidebar(page), tabs(page), page.get_by_role("table", name="Cell differential")),
+            cross(
+                sidebar(page),
+                tabs(page),
+                page.get_by_role("table", name="Cell differential"),
+            ),
             span(cell_panel(page)),
         ],
     )
@@ -325,7 +335,9 @@ with sync_playwright() as playwright:
     highlight(
         SCROLLER / "11-cell-clusters.png",
         [
-            cross(sidebar(page), tabs(page), page.get_by_role("table", name="Clusters")),
+            cross(
+                sidebar(page), tabs(page), page.get_by_role("table", name="Clusters")
+            ),
             span(page.locator("#openSeaDragon")),
         ],
     )
@@ -341,7 +353,9 @@ with sync_playwright() as playwright:
     highlight(
         SCROLLER / "12-dysplasias.png",
         [
-            cross(sidebar(page), tabs(page), page.get_by_role("table", name="Dysplasia")),
+            cross(
+                sidebar(page), tabs(page), page.get_by_role("table", name="Dysplasia")
+            ),
             span(cell_panel(page)),
         ],
     )

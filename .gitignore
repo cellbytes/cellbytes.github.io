@@ -30,3 +30,6 @@ pnpm-debug.log*
 /playwright/.cache/
 /generated
 /public/out.*
+
+# python env for the helper scripts (see AGENTS.md)
+.venv/
