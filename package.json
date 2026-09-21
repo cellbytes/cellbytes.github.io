@@ -2,6 +2,7 @@
   "name": "cellbytes-web",
   "type": "module",
   "version": "0.0.1",
+  "license": "EUPL-1.2",
   "scripts": {
     "dev": "astro dev --host",
     "start": "astro dev --host",
