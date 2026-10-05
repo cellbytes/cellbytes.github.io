@@ -1,0 +1,41 @@
+---
+title: "Context-Aware Cell Classification"
+description: "How machine learning is changing the way blood samples are analysed, and what it means for clinical laboratories and their patients."
+date: 2026-10-01
+author: "Cellbytes Team"
+tags: ["technology", "company"]
+image: ./hero.jpg
+imageAlt: "Colorful spheres popping in and out of a hexagonal grid of holes."
+---
+
+## Context-Aware Cell Classification for Bone Marrow Cytomorphology
+
+Bone marrow cytomorphology remains one of the most critical and labor-intensive diagnostic workflows in hematology. Identifying subtle morphological differences across developmental lineages demands years of expertise. Digital pathology algorithms often struggle to bridge the gap between individual cell views and overall clinical context.
+
+We believed to have made the cell classification more intelligent by integrating full-sample context and facilitating the validation process.
+
+## 1. 17 cell subtypes (and growing)
+
+Our algorithm detects and classifies bone marrow cells across 17 distinct subtype, with additional subtype models currently in development.
+
+When looking through a microscope, a pathologist never evaluates a cell in complete isolation. The surrounding cellular landscape gives vital context. A small blast and a mature lymphocyte can look nearly identical on a cropped nuclear image, but their context tells a completely different story.
+
+Traditional digital tools cut cells out into isolated single-crop images, stripping away that surrounding picture and leading to frequent mistakes. Cellbytes changes this by evaluating both the fine details of an individual cell and the overall cell composition of the full sample at the same time. By taking the full sample into account, the model resolves these confusing overlaps in a way that feels natural to how a physician reads a slide.
+
+## 2. Real-world validation
+
+Many existing commercial platforms report high accuracy scores achieved on hand-curated datasets. Given that the process is rarely transparent, many labs have communicated us their disappointment when the tool falls short in everyday practice.
+
+We decided to prove our software differently. In a massive cohort of 15,000 real-world samples, the cell classification demonstrated remarkable accuracy at counting key cell types like blasts, promonocytes, eosinophils, and plasma cells, giving you performance you can trust in your everyday laboratory practice.
+
+![alt-teksti](./validation.png "Correlation between sample-level cell proportions by Cellbytes (y-axis) and pathologist reports (x-axis).")
+
+## 3. Instant batch correction
+
+No AI model gets every single cell right every time, especially when dealing with complex or atypical patient slides. Instead of forcing you to click through and edit misclassified cells one by one, Cellbytes gives you a faster, smarter way to adjust the results.
+
+With our integrated cell similarity model <https://cellbytes.io/news/new-standard-for-cell-reclassification>, you can batch-correct entire groups of similar cells in a single action, consequently taking the frustration out of manual cleanup.
+
+## Your turn to try
+
+Our bone marrow classification solution is built to integrate seamlessly into digital workflows, bringing speed, sample-level accuracy, and real user control to diagnostic laboratories.
