@@ -8,6 +8,8 @@ image: ./hero.jpg
 imageAlt: "Colorful spheres popping in and out of a hexagonal grid of holes."
 ---
 
+import CellClasses from "~src/components/CellClassBrowser.astro";
+
 ## Context-Aware Cell Classification for Bone Marrow Cytomorphology
 
 Bone marrow cytomorphology remains one of the most critical and labor-intensive diagnostic workflows in hematology. Identifying subtle morphological differences across developmental lineages demands years of expertise. Digital pathology algorithms often struggle to bridge the gap between individual cell views and overall clinical context.
@@ -17,6 +19,8 @@ We believed to have made the cell classification more intelligent by integrating
 ## 1. 17 cell subtypes (and growing)
 
 Our algorithm detects and classifies bone marrow cells across 17 distinct subtype, with additional subtype models currently in development.
+
+<CellClasses sample="bone-marrow" />
 
 When looking through a microscope, a pathologist never evaluates a cell in complete isolation. The surrounding cellular landscape gives vital context. A small blast and a mature lymphocyte can look nearly identical on a cropped nuclear image, but their context tells a completely different story.
 
@@ -34,7 +38,7 @@ We decided to prove our software differently. In a massive cohort of 15,000 real
 
 No AI model gets every single cell right every time, especially when dealing with complex or atypical patient slides. Instead of forcing you to click through and edit misclassified cells one by one, Cellbytes gives you a faster, smarter way to adjust the results.
 
-With our integrated cell similarity model <https://cellbytes.io/news/new-standard-for-cell-reclassification>, you can batch-correct entire groups of similar cells in a single action, consequently taking the frustration out of manual cleanup.
+With our integrated cell similarity model ([https://cellbytes.io/news/new-standard-for-cell-reclassification](https://cellbytes.io/news/new-standard-for-cell-reclassification)), you can batch-correct entire groups of similar cells in a single action, consequently taking the frustration out of manual cleanup.
 
 ## Your turn to try
 

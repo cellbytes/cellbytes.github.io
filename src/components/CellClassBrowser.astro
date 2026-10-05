@@ -1,36 +1,17 @@
 ---
 import type { ImageMetadata } from "astro";
 import { Image } from "astro:assets";
-
-export interface Member {
-  name: string;
-  /**
-   * The application's class name, lowercased. It is also the folder the
-   * example crops live in, which is what pairs a class with its gallery.
-   */
-  key: string;
-}
-
-export interface Lineage {
-  name: string;
-  /**
-   * Set when the lineage is itself a single class rather than a grouping, in
-   * which case its name is the selectable item and it has no members.
-   */
-  key?: string;
-  /** The color the application paints this lineage's cells with. */
-  color: string;
-  /** Marked with an asterisk, meaning the dysplasia assessment covers it. */
-  dysplasia?: boolean;
-  members: (Member | { name: string; members: Member[] })[];
-}
+import { CELL_CLASSES, type SampleType } from "~src/utils/cellClasses";
 
 interface Props {
-  /** Distinct per instance, since the page renders one browser per sample type. */
-  id: string;
-  lineages: Lineage[];
+  /**
+   * Which label set to show. It also namespaces the tab ids, so one page can
+   * hold a browser per sample type.
+   */
+  sample: SampleType;
 }
-const { id, lineages } = Astro.props;
+const { sample } = Astro.props;
+const lineages = CELL_CLASSES[sample];
 
 // Every crop that has been exported, grouped by the class it belongs to. A
 // class with no folder here is a class the reference slide had no cells of, and
@@ -63,8 +44,8 @@ const first = shown[0]?.key;
  */
 const MAX_EXAMPLES = 12;
 
-const tabId = (key: string) => `${id}-tab-${key}`;
-const panelId = (key: string) => `${id}-panel-${key}`;
+const tabId = (key: string) => `${sample}-tab-${key}`;
+const panelId = (key: string) => `${sample}-panel-${key}`;
 ---
 
 <div class="browser" data-cell-browser>
