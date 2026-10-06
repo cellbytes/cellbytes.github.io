@@ -39,7 +39,8 @@ claude plugin install astro-lsp@cellbytes-cellbytes.github.io
 
 Inside the unified dev-env container the `app` repo's plugins are the ones
 loaded, and its `astro-lsp` finds this repo's server for `.astro` files; `.ts`
-there goes to tsgo instead, since an extension can only belong to one server.
+there goes to that repo's `typescript-lsp` instead, since an extension can only
+belong to one server.
 
 `.claude/lsp/astro-launcher.py` is a vendored copy owned by the `dev-env` repo -
 read its README for what the launcher does and why astro-ls needs one. Change it

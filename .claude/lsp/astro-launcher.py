@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Start the Astro language server for whichever repo in the workspace holds it.
 
-Unlike ty and tsgo, astro-ls talks to a push-only client unaided: it pushes real
+Unlike ty and tsc, astro-ls talks to a push-only client unaided: it pushes real
 diagnostics and asks the client nothing during startup. Two things still stand
 between it and a plugin that works from any repo in the workspace.
 
