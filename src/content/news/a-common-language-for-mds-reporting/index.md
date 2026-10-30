@@ -8,6 +8,8 @@ image: ./hero.jpg
 imageAlt: "Pink and purple mass of data particles with blooming yellow flowers."
 ---
 
+_How does Cellbytes address the recent bone marrow reporting standards by the International Consortium for Myelodysplastic Syndromes/Neoplasms [^1]?_
+
 Assessing dysplasia is one of the hardest parts of bone marrow cytomorphology. Dysplastic changes are often subtle, manifest in multiple forms, and spread across several cell lineages. Two experienced morphologists can look at the same slide and reach different conclusions.
 
 This variability matters. Diagnosing myelodysplastic syndromes/neoplasms (MDS) is fundamentally based on cytomorphological and histopathological assessments. Under the WHO classification, a lineage counts as dysplastic when at least 10% of its cells show dysplastic features [^1]. Reaching that threshold reliably requires careful counting.
