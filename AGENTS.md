@@ -147,6 +147,18 @@ rather than failing. `tests/sitemap.test.ts` is what catches that, by reading
 filesystem, so it belongs to the build; it also cannot use the `~src` alias,
 because `astro.config.mjs` loads it before Vite resolves one.
 
+### security.txt
+
+`public/.well-known/security.txt` (RFC 9116) tells whoever finds a
+vulnerability where to report it. Its `Expires` must be renewed before it
+passes, less than a year ahead: an expired file is to be treated as stale, which
+is worse than none.
+
+It survives the deploy only because `withastro/action` uploads the build with
+`include-hidden-files: true`; `actions/upload-pages-artifact` drops every
+dot-directory otherwise. Swapping the action for a hand-rolled upload has to
+keep that option.
+
 ### Structured data
 
 `src/utils/structuredData.ts` builds one `@graph` per page, emitted by
