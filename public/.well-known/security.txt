@@ -1,0 +1,4 @@
+Contact: mailto:security@cellbytes.io
+Expires: 2027-11-03T00:00:00Z
+Preferred-Languages: en, fi
+Canonical: https://cellbytes.io/.well-known/security.txt
