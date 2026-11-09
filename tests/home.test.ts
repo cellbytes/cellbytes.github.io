@@ -5,6 +5,32 @@ test("home page opens", async ({ page }) => {
   await expect(page).toHaveTitle(/Cellbytes/);
 });
 
+test("the hero swaps between the demo loop and the narrated intro", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const demo = page.locator("#demo-video");
+  const intro = page.locator("#intro-video");
+  const toggle = page.getByRole("button", { name: "Show me more" });
+  await expect(intro).toHaveClass(/inactive/);
+
+  await toggle.click();
+  await expect(
+    page.getByRole("button", { name: "Back to the demo" }),
+  ).toBeVisible();
+  // The narrated intro plays with sound; the demo pauses behind it.
+  await expect(intro).not.toHaveClass(/inactive/);
+  await expect(intro).toHaveJSProperty("muted", false);
+  await expect(demo).toHaveClass(/inactive/);
+  await expect(demo).toHaveJSProperty("paused", true);
+
+  await page.getByRole("button", { name: "Back to the demo" }).click();
+  await expect(demo).not.toHaveClass(/inactive/);
+  await expect(intro).toHaveClass(/inactive/);
+  await expect(intro).toHaveJSProperty("paused", true);
+  await expect(toggle).toBeVisible();
+});
+
 test.describe("desktop", { tag: "@desktop" }, () => {
   test.skip(({ isMobile }) => isMobile);
 

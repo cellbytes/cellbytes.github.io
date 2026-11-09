@@ -184,6 +184,45 @@ frontmatter (published) and git (modified), and which `Layout` also emits as the
 `article:*` OpenGraph properties. Both sides read one value, so they cannot
 disagree.
 
+### The front page videos
+
+The front page hero holds two HLS streams under `public/`: `banner/`, the
+silent looping walkthrough of the app, and `intro/`, the narrated
+introduction a visitor swaps to with the button under the frame. The banner
+is rendered by the `app` repo's `scripts/generate_banner_video.py` (see that
+repo's `docs/screen_recording.md`); the intro is an animation delivered as a
+finished MP4.
+
+Both follow one layout, so either can be replaced without touching the page:
+
+- 16:9, with renditions named by height: `v1080`, `v720`, `v540`, `v360`,
+  each a directory with `playlist.m3u8`, and a `master.m3u8` listing them. The
+  page only ever names the master.
+- Every rendition cuts its segments at the same timestamps, which is what
+  lets the player switch rendition at any segment boundary. A stream copied
+  from a delivered file keeps that file's keyframes, so the re-encoded
+  renditions force theirs at the same times (`-force_key_frames` with the
+  source's keyframe times) rather than on a fixed interval.
+- The intro's renditions carry its audio; the banner has none.
+- Playback starts on 720p, before the player has measured the connection:
+  sharp enough to open on, light enough not to stall a slow one. The page
+  plays through hls.js wherever the browser supports it, because hls.js is
+  the one player it can tell where to start (`startLevel`, matched by
+  height); Chrome's native HLS opens on the lowest tier. Safari's native
+  player, the fallback where hls.js cannot run, starts on the first variant
+  in the master playlist, so both masters list `v720` first.
+
+The two are separate `<video>` elements stacked in one grid cell, and a swap
+reveals the incoming one only once it has presented a frame
+(`requestVideoFrameCallback`). Pointing a single element at the other stream
+instead empties it for a frame, which shows as a flicker. The hidden one is
+paused, not unloaded, and stays rendered at zero opacity rather than
+`display: none`, so it is ready to show on the frame it is swapped in.
+
+The intro plays with sound and controls and does not loop. It is only ever
+started from the button's click, which is the user gesture that lets a
+browser play it unmuted.
+
 ### News posts are folders
 
 Every post is a folder holding the post and everything it uses:

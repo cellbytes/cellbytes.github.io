@@ -28,9 +28,7 @@ test.describe("desktop", { tag: "@desktop" }, () => {
   test("the front page preloads the hero poster", async ({ page, request }) => {
     await page.goto("/");
 
-    const poster = await page
-      .locator("video[data-hls-src]")
-      .getAttribute("poster");
+    const poster = await page.locator("#demo-video").getAttribute("poster");
     expect(poster, "the hero video has no poster").toBeTruthy();
 
     // The poster is what the page paints first and holds until the stream has

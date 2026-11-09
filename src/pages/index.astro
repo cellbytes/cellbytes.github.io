@@ -65,7 +65,7 @@ const poster = await getImage({
   <HeroSection class="hero">
     <div class="hero-content">
       <h1>Cellbytes &ndash; precision hematology with digital microscopy</h1>
-      <ApplicationFrame>
+      <ApplicationFrame class="hero-videos">
         <video
           width="1200"
           autoplay
@@ -75,9 +75,28 @@ const poster = await getImage({
           aria-label="Demonstration of Cellbytes’s features"
           poster={poster.src}
           data-hls-src="/banner/master.m3u8"
+          id="demo-video"
+        >
+        </video>
+        <video
+          width="1200"
+          controls
+          playsinline
+          preload="none"
+          aria-label="Introduction to Cellbytes"
+          data-hls-src="/intro/master.m3u8"
+          id="intro-video"
+          class="inactive"
         >
         </video>
       </ApplicationFrame>
+      <LinkButton
+        class="video-toggle"
+        aria-controls="demo-video intro-video"
+        data-video-toggle
+      >
+        Show me more
+      </LinkButton>
     </div>
   </HeroSection>
 
@@ -349,21 +368,81 @@ const poster = await getImage({
   // @ts-expect-error - hls.js light build ships without its own type declarations; runtime API matches the main export
   import Hls from "hls.js/light";
 
-  const video = document.querySelector<HTMLVideoElement>("video[data-hls-src]");
-  if (video) {
+  /** The rendition playback starts on, before throughput has been measured. */
+  const START_HEIGHT = 720;
+
+  /**
+   * Points a video at its `data-hls-src` stream, through hls.js wherever the
+   * browser supports it and natively otherwise.
+   *
+   * hls.js comes first because it is the only player that can be told where
+   * to start: Chrome's native HLS opens on the lowest tier and Safari's on the
+   * first one listed, which is why the playlists list 720p first for the
+   * players that still play natively.
+   */
+  const load = (video: HTMLVideoElement) => {
     const src = video.dataset.hlsSrc!;
-    if (video.canPlayType("application/vnd.apple.mpegurl")) {
-      video.src = src;
-    } else if (Hls.isSupported()) {
-      // 8 Mbps initial bandwidth estimate biases the first segment toward the
-      // highest rendition; hls.js will downshift if real throughput is lower.
-      // Without this the player starts on the lowest tier and the short loop
-      // often ends before it has ramped up to high.
-      const hls = new Hls({ abrEwmaDefaultEstimate: 8_000_000 });
+    if (Hls.isSupported()) {
+      const hls = new Hls();
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        const start = hls.levels.findIndex(
+          (level: { height: number }) => level.height === START_HEIGHT,
+        );
+        if (start !== -1) hls.startLevel = start;
+      });
       hls.loadSource(src);
       hls.attachMedia(video);
+    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+      video.src = src;
     }
     // No HLS support: the poster image stays visible (no further fallback).
+  };
+
+  /** Resolves once the video has put a frame on screen after `play()`. */
+  const firstFrame = (video: HTMLVideoElement) =>
+    new Promise<void>((resolve) => {
+      // Not in Firefox before 132; `playing` can fire a frame early there.
+      if (typeof video.requestVideoFrameCallback === "function") {
+        video.requestVideoFrameCallback(() => resolve());
+      } else {
+        video.addEventListener("playing", () => resolve(), { once: true });
+      }
+    });
+
+  const demo = document.querySelector<HTMLVideoElement>("#demo-video");
+  const intro = document.querySelector<HTMLVideoElement>("#intro-video");
+  const toggle = document.querySelector<HTMLButtonElement>(
+    "[data-video-toggle]",
+  );
+
+  if (demo && intro && toggle) {
+    load(demo);
+    let introLoaded = false;
+    let wanted = demo;
+
+    // Both videos stay attached and the hidden one is only paused, so a swap
+    // never empties an element: the incoming video is revealed once it has a
+    // frame to show, and the outgoing one keeps its frame until then. The
+    // intro is narrated, so it plays once with sound and controls, and only
+    // ever starts from this click, which is what lets it play unmuted.
+    toggle.addEventListener("click", () => {
+      const showIntro = intro.classList.contains("inactive");
+      const [incoming, outgoing] = showIntro ? [intro, demo] : [demo, intro];
+      if (showIntro && !introLoaded) {
+        load(intro);
+        introLoaded = true;
+      }
+      toggle.textContent = showIntro ? "Back to the demo" : "Show me more";
+      wanted = incoming;
+      void firstFrame(incoming).then(() => {
+        // A later click has already asked for the other video.
+        if (wanted !== incoming) return;
+        incoming.classList.remove("inactive");
+        outgoing.classList.add("inactive");
+        outgoing.pause();
+      });
+      incoming.play().catch(() => {});
+    });
   }
 </script>
 
@@ -423,8 +502,29 @@ const poster = await getImage({
     font-size: var(--text-size-body);
   }
 
-  video {
-    aspect-ratio: 16 / 10;
+  /* Both videos share one grid cell, and the inactive one sits invisibly
+     over the active one rather than being hidden, so that it keeps rendering
+     and is ready to be swapped in on the frame it is revealed. Both are 16:9,
+     so the swap never changes the frame's shape. The frame gets a definite
+     width because it is a shrink-to-fit flex item: sized by its videos, it
+     would change size as each loads its poster and then its stream. */
+  .hero-videos {
+    display: grid;
+    width: 100%;
+  }
+  .hero-videos video {
+    grid-area: 1 / 1;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+  .hero-videos video.inactive {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .video-toggle {
+    margin-block-start: var(--element-padding);
   }
 
   .ingress {
