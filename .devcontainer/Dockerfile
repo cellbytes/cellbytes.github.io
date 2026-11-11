@@ -2,7 +2,7 @@
 # Base image #
 ##############
 FROM mcr.microsoft.com/vscode/devcontainers/base:ubuntu-22.04
-ENV NODE_VERSION=24.22.1
+ENV NODE_VERSION=24.22.2
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -17,7 +17,7 @@ RUN mkdir $NVM_DIR
 ENV PATH="$NVM_DIR/versions/node/v${NODE_VERSION}/bin/:${PATH}"
 
 # install nvm and current node
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.8/install.sh | bash
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.41.0/install.sh | bash
 RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
 RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
 RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
