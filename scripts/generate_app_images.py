@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "playwright==1.62.0",
+#     "playwright==1.65.0",
 #     "pillow",
 #     "numpy",
 # ]
