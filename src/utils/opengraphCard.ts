@@ -81,7 +81,7 @@ const BRAND_LOGO_HEIGHT = Math.round(BRAND_LOGO_WIDTH / LOGO_ASPECT);
  * each asset's viewBox so a drawn width implies its height.
  *
  * The cells are the detached corner rather than the large cluster: that one
- * packs 70 blobs into its box, which reads as fizz next to the bytes instead of
+ * packs 71 cells into its box, which reads as fizz next to the bytes instead of
  * as its counterpart. This one has 11, at a size that matches the squares.
  */
 const BYTES_CLUSTER = {

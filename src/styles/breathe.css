@@ -1,7 +1,7 @@
 /*
  * Ambient animation for the inlined background SVGs. Astro inlines
  * imported SVGs into the page, so every cell / byte square in the
- * artwork is a real <path> this stylesheet can animate - no asset
+ * artwork is a real element this stylesheet can animate - no asset
  * edits needed. Each usage opts in by adding a recipe class next to
  * its positioning class, e.g. <CellsCluster class="cells breathe" />;
  * Astro forwards the class onto the inlined <svg> root.
@@ -12,14 +12,34 @@
  * animate in unison. Leave those static.
  */
 
+/*
+ * An inline <svg> clips to its own box, so a cell drawn up to the edge of
+ * its graphic was cut off by a hard edge as it breathed past it. The cells
+ * graphics draw outside their box instead. Where a design wants them cropped,
+ * the section around them does it (CellsSection, CellsEdgeSection), and the
+ * page clips sideways overflow, so nothing can widen the page.
+ */
+svg.breathe {
+  overflow: visible;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   /*
    * breathe: for the cells graphics. Each cell squishes, drifts and
    * tilts on three independent transform channels with mismatched
    * durations, so the combined phase takes ages to repeat and reads
    * as idle organic motion rather than a loop.
+   *
+   * The cells graphics are built from a kit (see "Cell artwork" in
+   * AGENTS.md): each placement is a <g> carrying the cell's position,
+   * around one child drawn about the origin - a red cell's <use>, or a
+   * white cell's own <g> of cytoplasm and nucleus. Animating that child
+   * moves the whole cell, nucleus included, around its own centre,
+   * while the placement keeps it where the layout put it. The kit's
+   * shapes in <defs> must stay still: every instance of a shape would
+   * inherit their animation and breathe in unison.
    */
-  svg.breathe :is(path, circle, ellipse) {
+  svg.breathe > g > g > * {
     /* Scale/rotate around each cell's own box, not the SVG origin. */
     transform-box: fill-box;
     transform-origin: center;
@@ -30,30 +50,95 @@
   }
 
   /* Desynchronize neighbours. Cycles of 3 and 5 overlap to give 15
-     distinct phase combinations before the pattern repeats. These
+     distinct phase combinations before the pattern repeats. The
+     placements are the siblings, so they are what is counted. These
      overrides must come after the animation shorthand above: the
      shorthand resets delay and duration, so they only survive by
      winning the cascade. */
-  svg.breathe :is(path, circle, ellipse):nth-child(3n + 1) {
+  svg.breathe > g > g:nth-child(3n + 1) > * {
     animation-delay:
       -1.9s,
       -3.1s,
       -5.4s;
   }
 
-  svg.breathe :is(path, circle, ellipse):nth-child(3n + 2) {
+  svg.breathe > g > g:nth-child(3n + 2) > * {
     animation-delay:
       -3.7s,
       -6.2s,
       -1.2s;
   }
 
-  svg.breathe :is(path, circle, ellipse):nth-child(5n + 1) {
+  svg.breathe > g > g:nth-child(5n + 1) > * {
     animation-duration: 5.3s, 8.7s, 7.1s;
   }
 
-  svg.breathe :is(path, circle, ellipse):nth-child(5n + 3) {
+  svg.breathe > g > g:nth-child(5n + 3) > * {
     animation-duration: 4.1s, 6.9s, 5.7s;
+  }
+
+  /*
+   * A white cell's nucleus also moves on its own inside the cell, more
+   * gently and on durations unrelated to the cell's, so it floats rather
+   * than being carried rigidly. The amplitudes are NUCLEUS_MOTION in
+   * scripts/build-cells.mjs, which fails the build if any nucleus in the
+   * kit could leave its cytoplasm with them: change both together.
+   */
+  svg.breathe > g > g > g > g {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation:
+      nucleus-squish 3.7s ease-in-out infinite alternate,
+      nucleus-drift 5.9s ease-in-out infinite alternate,
+      nucleus-tilt 5.1s ease-in-out infinite alternate;
+  }
+
+  svg.breathe > g > g:nth-child(3n + 1) > g > g {
+    animation-delay:
+      -2.6s,
+      -0.8s,
+      -3.9s;
+  }
+
+  svg.breathe > g > g:nth-child(3n + 2) > g > g {
+    animation-delay:
+      -1.1s,
+      -4.4s,
+      -2.2s;
+  }
+
+  svg.breathe > g > g:nth-child(4n + 1) > g > g {
+    animation-duration: 4.3s, 6.6s, 4.7s;
+  }
+
+  @keyframes nucleus-squish {
+    from {
+      scale: 1.04 0.96;
+    }
+
+    to {
+      scale: 0.96 1.04;
+    }
+  }
+
+  @keyframes nucleus-drift {
+    from {
+      translate: 3% -3%;
+    }
+
+    to {
+      translate: -3% 3%;
+    }
+  }
+
+  @keyframes nucleus-tilt {
+    from {
+      rotate: 4deg;
+    }
+
+    to {
+      rotate: -4deg;
+    }
   }
 
   @keyframes cell-squish {

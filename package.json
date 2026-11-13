@@ -10,7 +10,8 @@
     "preview": "astro preview --host",
     "astro": "astro",
     "test": "playwright test",
-    "test:smoke": "playwright test tests/home.test.ts"
+    "test:smoke": "playwright test tests/home.test.ts",
+    "cells": "node scripts/build-cells.mjs"
   },
   "dependencies": {
     "@astrojs/check": "0.9.12",

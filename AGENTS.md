@@ -405,7 +405,7 @@ Things worth knowing before editing `src/utils/opengraphCard.ts`:
   left. `card: { variant: "brand" }` picks the other, the logotype alone between
   the clusters on opposite corners, which the front page uses.
 - For the cells, reach for `corner-detached` over `cluster-large`: the large
-  cluster packs 70 blobs into its box, which shrinks to fizz beside the bytes
+  cluster packs 71 cells into its box, which shrinks to fizz beside the bytes
   rather than reading as their counterpart.
 - Text on a cluster card is clamped to a narrower measure so it stays clear of
   the artwork. A photo card has a full-bleed scrim instead, so it runs the full
@@ -419,6 +419,66 @@ Things worth knowing before editing `src/utils/opengraphCard.ts`:
   light card, so the rule above the headline switches to `--accent-1` there.
 - Titles and descriptions are clamped (3 and 2 lines) and the title steps down
   in size as it gets longer, so overlong copy degrades instead of overflowing.
+
+### Cell artwork
+
+The cells graphics in `src/assets/backgrounds/cells/` are generated, not
+exported: `npm run cells` builds each one from the cell kit and a layout, and
+the output is committed so the site build and the sharing cards read plain
+files. Edit the kit or a layout, then rebuild; never edit the output.
+
+- `art/cells/kit.svg` holds every distinct shape once, drawn around its own
+  centroid and lit from the top: cytoplasms (`c1`...), nuclei (`n1`...) and
+  red cells (`r1`...), plus one radial gradient per kind. Opened on its own it
+  previews them. The designer's kit drew many shapes several times over,
+  rotated, mirrored, rescaled or barely altered; those are folded into one
+  shape each, so a near-copy is a transform, not a second path.
+- `art/cells/cells.json` composes the white cells: each `wNN` is its cytoplasm
+  and nuclei, as `[shape, x, y, scale?, rotation?, flip?]` in the cell's own
+  frame (cytoplasm centroid at the origin). There is one per cytoplasm in the
+  designer's kit. That kit draws nuclei beside their cells, so where a nucleus
+  sits comes from the designer's composed cluster for the cells it uses, and
+  is centred for the rest.
+- `art/cells/layouts/<name>.json` places cells for `<name>.svg`: the viewBox,
+  then one `[id, x, y, scale?, rotation?, flip?]` per cell, drawn in order,
+  where `id` is a white cell or a red cell shape. Scale, rotation (degrees)
+  and flip (`-1` mirrors horizontally, before rotating) default to 1, 0 and 1.
+- Each output carries only the shapes and gradients its layout uses, so a
+  graphic stays self-contained however big the kit grows.
+
+Why it is built this way:
+
+- Size. An export draws every cell in full with its own gradient; the kit
+  draws each shape once and a placement costs a few dozen bytes. The
+  designer's 86 KB cluster rebuilds to 17 KB (4 KB gzipped), and every graphic
+  is inlined into the HTML of every page that shows it, so this is paid on
+  each page view.
+- One gradient per kind. Each has a single radial gradient in
+  `objectBoundingBox` units, so it fits any shape of that kind at any size. An
+  export's per-cell gradients turned out to be the same gradient in each
+  cell's own box, give or take a few percent.
+- The light stays put. A rotated or mirrored shape would carry its highlight
+  round with it, so the build paints each one with a copy of its gradient
+  turned back by the shape's angle (to the nearest 15 degrees) and mirrored
+  back if it is mirrored. Shapes can therefore be placed at any angle.
+- The kit draws every shape around the origin, which the breathe animation in
+  `src/styles/breathe.css` relies on: each placement is a `<g>` carrying the
+  position, around one child the stylesheet animates about its own centre.
+  Never animate the kit's shapes themselves; every instance of a shape shares
+  them and would move in unison.
+- A white cell's nuclei sit in one group that also moves on its own inside
+  the cell, so all lobes move together. The multiply blend is on that group
+  rather than on the shapes, since an animated group can be composited on its
+  own and would cut a blend inside it off from the cytoplasm. The cell's own
+  breathing moves cytoplasm and nucleus together and cannot push a nucleus
+  out, so only the nucleus's motion is at risk. The build tries every cell's
+  nucleus across that motion (`NUCLEUS_MOTION`, kept in step with the nucleus
+  keyframes) with some headroom, and fails rather than ship a nucleus that
+  leaves its cell.
+- The cells graphics draw outside their own box (`overflow: visible` on
+  `svg.breathe`), so a cell at the edge breathes past it instead of being cut
+  by a hard edge. A section that wants its cells cropped does it at its own
+  edge.
 
 ### Colors in SVG artwork
 
