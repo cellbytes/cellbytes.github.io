@@ -89,7 +89,7 @@ const BYTES_CLUSTER = {
   aspect: 759.998 / 592.53,
 } as const;
 const CELLS_CLUSTER = {
-  asset: "src/assets/backgrounds/cells/corner-detached.svg",
+  asset: "src/assets/backgrounds/cells/standalone/corner-detached.svg",
   aspect: 193.921 / 236.111,
 } as const;
 

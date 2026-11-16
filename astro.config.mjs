@@ -27,10 +27,24 @@ import { titleFigure } from "./src/utils/titleFigure.ts";
 // static "prefix" for every file and the ids still collide. Instead we derive
 // a per-file prefix from a hash of the contents: deterministic (stable build
 // output) and unique per distinct SVG.
+//
+// The cells graphics are the exception (see "Cell artwork" in AGENTS.md): they
+// link to shapes and gradients in a sprite inlined once per page, and prefixIds
+// rewrites every link, including one to an id defined in another file. Their
+// ids and links all carry the CELL_SPRITE_PREFIX namespace instead, and an SVG
+// whose ids and links are all under it is left as it is.
+const CELL_SPRITE_PREFIX = "ck-";
+/** @param {string} contents */
+const onlyCellSpriteIds = (contents) =>
+  [
+    ...contents.matchAll(/ id="([^"]*)"|href="#([^"]*)"|url\(#([^)]*)\)/g),
+  ].every((m) => (m[1] ?? m[2] ?? m[3] ?? "").startsWith(CELL_SPRITE_PREFIX)) &&
+  contents.includes(CELL_SPRITE_PREFIX);
 const prefixIdsOptimizer = {
   name: "svgo-prefix-ids",
   /** @param {string} contents */
   optimize: (contents) => {
+    if (onlyCellSpriteIds(contents)) return contents;
     const hash = createHash("sha1").update(contents).digest("hex").slice(0, 8);
     return optimize(contents, {
       plugins: [{ name: "prefixIds", params: { prefix: `svg${hash}` } }],

@@ -12,6 +12,7 @@ import {
 } from "~src/utils/opengraph";
 import { canonicalUrl } from "~src/utils/url";
 import { graph } from "~src/utils/structuredData";
+import CellSprite from "~src/assets/backgrounds/cells/sprite.svg";
 import "~src/styles/breathe.css";
 import "~src/styles/reset.css";
 import "~src/styles/theme.css";
@@ -156,6 +157,7 @@ const pageUrl = canonicalUrl(Astro.url.pathname, Astro.site);
       <slot />
     </main>
     <Footer />
+    <CellSprite />
   </body>
 </html>
 

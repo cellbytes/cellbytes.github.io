@@ -427,6 +427,14 @@ exported: `npm run cells` builds each one from the cell kit and a layout, and
 the output is committed so the site build and the sharing cards read plain
 files. Edit the kit or a layout, then rebuild; never edit the output.
 
+The build writes each graphic twice. `<name>.svg` is what the site imports: its
+cells only, linking to shapes and gradients in `sprite.svg`, which
+`Layout.astro` inlines once at the end of every page. A page showing five
+graphics therefore carries each shared shape once rather than five times, and
+every page pays for the whole sprite (about 4 KB gzipped), cells or not.
+`standalone/<name>.svg` is the same graphic carrying its own definitions, for
+anything that reads the file rather than a page (the sharing cards).
+
 - `art/cells/kit.svg` holds every distinct shape once, drawn around its own
   centroid and lit from the top: cytoplasms (`c1`...), nuclei (`n1`...) and
   red cells (`r1`...), plus one radial gradient per kind. Opened on its own it
@@ -443,8 +451,8 @@ files. Edit the kit or a layout, then rebuild; never edit the output.
   then one `[id, x, y, scale?, rotation?, flip?]` per cell, drawn in order,
   where `id` is a white cell or a red cell shape. Scale, rotation (degrees)
   and flip (`-1` mirrors horizontally, before rotating) default to 1, 0 and 1.
-- Each output carries only the shapes and gradients its layout uses, so a
-  graphic stays self-contained however big the kit grows.
+- A standalone graphic carries only the shapes and gradients its layout uses,
+  and the sprite only those some layout uses, so neither grows with the kit.
 
 Why it is built this way:
 
@@ -452,7 +460,16 @@ Why it is built this way:
   draws each shape once and a placement costs a few dozen bytes. The
   designer's 86 KB cluster rebuilds to 17 KB (4 KB gzipped), and every graphic
   is inlined into the HTML of every page that shows it, so this is paid on
-  each page view.
+  each page view. Half of a graphic is its definitions, which is why a page
+  shares them between its graphics.
+- The sprite is sized to nothing rather than hidden, and the definitions are
+  not in the first graphic that uses them: a graphic may be `display: none` at
+  some widths (the news page hides its cluster on narrow screens), and Chromium
+  paints nothing that references a gradient inside a `display: none` `<svg>`.
+- The ids, links and nucleus class the graphics share with the sprite are
+  namespaced `ck-`. The SVGO `prefixIds` pass in `astro.config.mjs` rewrites
+  every link in a file, even to an id defined in another file, so it leaves an
+  SVG whose ids and links are all `ck-` alone.
 - One gradient per kind. Each has a single radial gradient in
   `objectBoundingBox` units, so it fits any shape of that kind at any size. An
   export's per-cell gradients turned out to be the same gradient in each

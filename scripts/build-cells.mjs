@@ -3,17 +3,35 @@
 //   npm run cells
 //
 // Reads art/cells/kit.svg (the shapes), art/cells/cells.json (white cells
-// composed from them) and every art/cells/layouts/<name>.json, and writes
-// src/assets/backgrounds/cells/<name>.svg. See "Cell artwork" in AGENTS.md for
-// the formats and why the graphics are built this way.
+// composed from them) and every art/cells/layouts/<name>.json, and writes, in
+// src/assets/backgrounds/cells/:
+//
+// - <name>.svg, the graphic as the site inlines it: its cells only, linking
+//   to shapes and gradients in sprite.svg;
+// - sprite.svg, every shape and gradient the graphics use, which the page
+//   layout inlines once;
+// - standalone/<name>.svg, the graphic as a self-contained file, for anything
+//   that reads the file rather than a page (the sharing cards).
+//
+// See "Cell artwork" in AGENTS.md for the formats and why the graphics are
+// built this way.
 
-import { readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
 
 const KIT = "art/cells/kit.svg";
 const CELLS = "art/cells/cells.json";
 const LAYOUTS = "art/cells/layouts";
 const OUT = "src/assets/backgrounds/cells";
+const SPRITE = join(OUT, "sprite.svg");
+const STANDALONE = join(OUT, "standalone");
+
+/**
+ * Namespace for the ids and the class the site's graphics share with the
+ * sprite. The SVGO pass in astro.config.mjs leaves an SVG whose ids and links
+ * are all under it alone, so the links between files survive.
+ */
+const SPRITE_PREFIX = "ck-";
 
 /**
  * Lighting is kept within this many degrees of straight down. Each distinct
@@ -265,11 +283,12 @@ function escapingNuclei(kit, cells) {
 }
 
 /**
- * The graphic for one layout. Each placement is a <g> carrying its position,
- * around one animated child drawn about the origin: a red cell's <use>, or a
- * white cell's own <g> of cytoplasm and nucleus <use>s. The stylesheet
- * animates that child about its own centre, so a whole cell breathes as one
- * and the animation never replaces the placement.
+ * The graphic for one layout: its viewBox, the definitions it uses by id and
+ * its body. Each placement is a <g> carrying its position, around one animated
+ * child drawn about the origin: a red cell's <use>, or a white cell's own <g>
+ * of cytoplasm and nucleus <use>s. The stylesheet animates that child about
+ * its own centre, so a whole cell breathes as one and the animation never
+ * replaces the placement.
  */
 function buildGraphic(kit, cells, layout) {
   const shapes = new Set();
@@ -306,23 +325,38 @@ function buildGraphic(kit, cells, layout) {
     [...lights.values()].map((g) => g.match(/href="#(\w+)"/)[1]),
   );
   for (const id of shapes) bases.add(GRADIENT_BY_PREFIX[id[0]]);
+  const defs = new Map([
+    ...[...bases].sort().map((b) => [b, kit.gradients.get(b)]),
+    ...lights,
+    ...[...shapes].sort().map((s) => [s, kit.shapes.get(s)]),
+  ]);
+  return {
+    viewBox: layout.viewBox.map(num).join(" "),
+    defs,
+    body: [`<g style="isolation:isolate">`, ...placements, `</g>`].join("\n"),
+  };
+}
+
+/** A graphic as a file of its own, carrying every definition it uses. */
+function standalone(kit, graphic) {
   return [
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${layout.viewBox.map(num).join(" ")}">`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${graphic.viewBox}">`,
     `<style>${kit.style}</style>`,
-    `<defs>${[...bases]
-      .sort()
-      .map((b) => kit.gradients.get(b))
-      .join("")}${[...lights.values()].join("")}${[...shapes]
-      .sort()
-      .map((s) => kit.shapes.get(s))
-      .join("")}</defs>`,
-    `<g style="isolation:isolate">`,
-    ...placements,
-    `</g>`,
+    `<defs>${[...graphic.defs.values()].join("")}</defs>`,
+    graphic.body,
     `</svg>`,
     "",
   ].join("\n");
 }
+
+/** Markup with its ids, references and nucleus class put under SPRITE_PREFIX. */
+const namespaced = (markup) =>
+  markup
+    .replaceAll(' id="', ` id="${SPRITE_PREFIX}`)
+    .replaceAll(' href="#', ` href="#${SPRITE_PREFIX}`)
+    .replaceAll("url(#", `url(#${SPRITE_PREFIX}`)
+    .replaceAll(' class="n"', ` class="${SPRITE_PREFIX}n"`)
+    .replaceAll(".n{", `.${SPRITE_PREFIX}n{`);
 
 const kit = readKit(KIT);
 const cells = JSON.parse(readFileSync(CELLS, "utf8"));
@@ -333,9 +367,39 @@ if (escaping.length) {
       "inward in cells.json, or lower NUCLEUS_MOTION here and in breathe.css",
   );
 }
+const defs = new Map();
+mkdirSync(STANDALONE, { recursive: true });
 for (const file of readdirSync(LAYOUTS).filter((f) => f.endsWith(".json"))) {
+  const name = basename(file, ".json");
   const layout = JSON.parse(readFileSync(join(LAYOUTS, file), "utf8"));
-  const out = join(OUT, `${basename(file, ".json")}.svg`);
-  writeFileSync(out, buildGraphic(kit, cells, layout));
+  const graphic = buildGraphic(kit, cells, layout);
+  writeFileSync(join(STANDALONE, `${name}.svg`), standalone(kit, graphic));
+  for (const [id, markup] of graphic.defs) defs.set(id, namespaced(markup));
+  const out = join(OUT, `${name}.svg`);
+  writeFileSync(
+    out,
+    [
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${graphic.viewBox}">`,
+      namespaced(graphic.body),
+      `</svg>`,
+      "",
+    ].join("\n"),
+  );
   console.log(`${out}: ${layout.cells.length} cells`);
 }
+// Sized to nothing rather than hidden: Chromium paints nothing that references
+// a gradient inside a display: none <svg>.
+writeFileSync(
+  SPRITE,
+  [
+    `<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" style="position:absolute;overflow:hidden">`,
+    `<style>${namespaced(kit.style)}</style>`,
+    `<defs>${[...defs.keys()]
+      .sort()
+      .map((id) => defs.get(id))
+      .join("")}</defs>`,
+    `</svg>`,
+    "",
+  ].join("\n"),
+);
+console.log(`${SPRITE}: ${defs.size} definitions`);
